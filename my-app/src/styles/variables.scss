@@ -1,0 +1,42 @@
+//Colors
+$red: #ff0000;
+$green: #008000;
+$blue: #0000ff;
+$grey: #c9c9c9;
+
+//Font-size
+@mixin text16 {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@mixin text20 {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+@mixin text36 {
+  font-size: 36px;
+  line-height: 42px;
+}
+
+// FlexBox
+@mixin flex-align-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  @include flex-align-center;
+  flex-direction: column;
+}
+
+@mixin flex-column-center-center {
+  @include flex-column-center;
+  justify-content: center;
+}
