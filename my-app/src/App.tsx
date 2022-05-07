@@ -1,22 +1,17 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { FormAuthPage } from './pages/formForLogIn/formLogin';
-import { ManagementProjectsPage } from './pages/managementParogectsPage/managementProjectsPage';
-import { ManagementProjectPage } from './pages/managementsProjectPage/managmentProjectPage';
-import { NotFoundPage } from './pages/notFoundPage/noFoundPage';
-import { WelcomePage } from './pages/welcomePage/welcomePage';
+import { Provider } from 'react-redux';
+import { Router, Header, Footer } from './components';
+import { setupStore } from './store/store';
+
+const store = setupStore();
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/project" element={<ManagementProjectPage />} />
-        <Route path="/projects" element={<ManagementProjectsPage />} />
-        <Route path="/login" element={<FormAuthPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </div>
+    <Provider store={store}>
+      <Header />
+      <Router />
+      <Footer />
+    </Provider>
   );
 }
 

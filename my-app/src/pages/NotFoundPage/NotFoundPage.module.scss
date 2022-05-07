@@ -1,0 +1,5 @@
+@import '../../styles/variables.scss';
+
+.notFoundPage {
+  @include flex-column-center-center;
+}
