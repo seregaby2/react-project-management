@@ -2,4 +2,58 @@
 
 .footer {
   display: flex;
+  height: 80px;
+  width: 100%;
+  background-color: $grey;
+
+  .container {
+    max-width: 1920px;
+    width: 100%;
+    @include flex-align-center;
+    justify-content: space-between;
+    padding: 0 40px;
+
+    img {
+      height: 50px;
+    }
+
+    h6 {
+      @include text20;
+    }
+
+    nav {
+      @include flex-align-center;
+
+      li {
+        list-style: none;
+        margin-bottom: 5px;
+        margin-left: 25px;
+
+        a {
+          text-decoration: none;
+          font-weight: 600;
+          color: $blue;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .footer {
+    .container {
+      padding: 0 25px;
+
+      img {
+        height: 25px;
+      }
+
+      nav {
+        li {
+          margin-left: 10px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
 }

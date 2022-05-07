@@ -24,10 +24,29 @@ main {
   width: 100%;
   flex: 1 1 auto;
   padding: 0 25px;
-  background: $grey;
+  //background: $grey;
 }
 
 #root {
   min-height: 100%;
   @include flex-column-center;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px grey;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $grey;
+  border: 1px solid $blue;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $blue;
 }
