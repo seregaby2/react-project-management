@@ -4,3 +4,7 @@ export { Footer } from './Footer/Footer';
 export { AboutUs } from './AboutUs/AboutUs';
 export { SignInSignUp } from './SignInSignUp/SignInSignUp';
 export { SwitchLocalization } from './SwitchLocalization/SwitchLocalization';
+export { NavBar } from './Navigation/NavBar';
+export { NavList } from './Navigation/NavList';
+export { Navigation } from './Navigation/Navigation';
+export { MobileNavigation } from './Navigation/MobileNavigation';
