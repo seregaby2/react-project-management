@@ -4,9 +4,14 @@ import styles from './NavBar.module.scss';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import clsx from 'clsx';
+import useOnclickOutside from 'react-cool-onclickoutside';
 
 export const MobileNavigation = () => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  const ref = useOnclickOutside(() => {
+    setIsOpenMenu(false);
+  });
 
   const handleisOpenMenu = () => {
     setIsOpenMenu((prev) => !prev);
@@ -18,7 +23,7 @@ export const MobileNavigation = () => {
   return (
     <>
       <div className={styles.menuIcon}>{!isOpenMenu ? menuIconOpen : menuIconClose}</div>
-      <nav className={clsx(styles.mobileNavigation, isOpenMenu && styles.active)}>
+      <nav ref={ref} className={clsx(styles.mobileNavigation, isOpenMenu && styles.active)}>
         {<NavList handleisOpenMenu={handleisOpenMenu} />}
       </nav>
     </>
