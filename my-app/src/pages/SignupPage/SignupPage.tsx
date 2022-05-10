@@ -2,12 +2,15 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
+import { useAppDispatch } from '../../hooks/redux';
+import { fetchDataAuth } from '../../store/reducers/actionCreatorAuth';
+import { fetchDataLogin } from '../../store/reducers/actionSignin';
 import {
   loginValidation,
   nameValidation,
   passwordValidation,
 } from '../../components/validation/validation';
-import styles from './LoginPage.module.scss';
+import styles from './SignupPage.module.scss';
 
 interface ISignInForm {
   name: string;
@@ -15,9 +18,19 @@ interface ISignInForm {
   password: string;
 }
 
-export function LoginPage() {
-  const { handleSubmit, control } = useForm<ISignInForm>();
-  const onSubmit: SubmitHandler<ISignInForm> = (data) => console.log(data);
+export function SignupPage() {
+  const dispatch = useAppDispatch();
+
+  const { handleSubmit, reset, control } = useForm<ISignInForm>();
+  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
+    await dispatch(fetchDataAuth(data));
+    await dispatch(fetchDataLogin(data));
+    reset({
+      name: '',
+      login: '',
+      password: '',
+    });
+  };
   const { errors } = useFormState({
     control,
   });
@@ -94,6 +107,7 @@ export function LoginPage() {
               margin="normal"
               fullWidth
               onChange={(e) => field.onChange(e)}
+              value={field.value || ''}
               error={!!errors.password?.message}
               helperText={errors.password?.message}
               FormHelperTextProps={{
