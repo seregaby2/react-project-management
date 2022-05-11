@@ -15,3 +15,9 @@ export interface ISignInForm {
 export interface Itoken {
   token: string;
 }
+
+export interface ISingUp {
+  id: string;
+  name: string;
+  login: string;
+}

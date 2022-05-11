@@ -3,8 +3,8 @@ import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
 import { useAppDispatch } from '../../hooks/redux';
-import { fetchDataAuth } from '../../store/reducers/actionCreatorAuth';
-import { fetchDataLogin } from '../../store/reducers/actionSignin';
+import { fetchDataAuth } from '../../api/actionCreatorAuth';
+import { fetchDataLogin } from '../../api/actionSignin';
 import {
   loginValidation,
   nameValidation,

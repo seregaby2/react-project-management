@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
 import { loginValidation, passwordValidation } from '../../components/validation/validation';
 import styles from './LoginPage.module.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { fetchDataLogin } from '../../store/reducers/actionSignin';
+import { fetchDataLogin } from '../../api/actionSignin';
 import { useNavigate } from 'react-router-dom';
 
 interface ISignInForm {
@@ -16,7 +16,7 @@ interface ISignInForm {
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
-  const { errorLogin } = useAppSelector((state) => state.reducerSingupRequest);
+  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
   const navigate = useNavigate();
   const { handleSubmit, control } = useForm<ISignInForm>();
   const { errors } = useFormState({
@@ -25,9 +25,14 @@ export function LoginPage() {
 
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
     await dispatch(fetchDataLogin(data));
-    if (errorLogin.length === 0) navigate('/main');
   };
 
+  useEffect(() => {
+    console.log(isAuth, 'error');
+    if (isAuth) navigate('/main');
+  }, [isAuth, navigate]);
+
+  console.log(isAuth, 'error2');
   return (
     <div className={styles.formAuthPage}>
       <Typography variant="h4" component="div">

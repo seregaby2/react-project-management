@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ISignInForm } from '../../components/interface';
-import { AppDispatch } from '../store';
-import { SingupSlice } from './authSlice';
+import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
+import { AppDispatch } from '../store/store';
+import { SingupSlice } from '../store/reducers/authSlice';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -9,13 +9,15 @@ export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDisp
   try {
     dispatch(SingupSlice.actions.authFetching());
 
-    await axios.post<ISignInForm>(`${baseUrl}/signup`, {
+    const response = await axios.post<ISingUp>(`${baseUrl}/signup`, {
       name: dataAuth.name,
       login: dataAuth.login,
       password: dataAuth.password,
     });
+    localStorage.setItem('id', response.data.id);
     dispatch(SingupSlice.actions.authFetchingSuccess());
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.authFetchingError(e.message));
+    localStorage.removeItem('id');
   }
 };
