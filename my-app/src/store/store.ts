@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { reducerRequestApi } from './reducers/userSlise';
+import { reducerBoards } from './reducers/boardsSlice';
 
 const rootReducer = combineReducers({
   reducerRequestApi,
+  reducerBoards,
 });
 
 export const setupStore = () => {
