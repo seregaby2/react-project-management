@@ -18,16 +18,15 @@ export function LoginPage() {
   const dispatch = useAppDispatch();
   const { errorLogin } = useAppSelector((state) => state.reducerSingupRequest);
   const navigate = useNavigate();
-
   const { handleSubmit, control } = useForm<ISignInForm>();
-  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
-    await dispatch(fetchDataLogin(data));
-    console.log(errorLogin, 'error');
-    if (errorLogin.length === 0) navigate('/main');
-  };
   const { errors } = useFormState({
     control,
   });
+
+  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
+    await dispatch(fetchDataLogin(data));
+    if (errorLogin.length === 0) navigate('/main');
+  };
 
   return (
     <div className={styles.formAuthPage}>
