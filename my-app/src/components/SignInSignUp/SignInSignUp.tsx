@@ -36,7 +36,7 @@ export const SignInSignUp = () => {
           <Button
             variant="text"
             onClick={() => {
-              navigate('/login');
+              navigate('/signup');
             }}
           >
             sign up

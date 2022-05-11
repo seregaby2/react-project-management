@@ -28,7 +28,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
     },
   },
   '& .MuiSwitch-thumb': {
-    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+    boxShadow: '0 2px 4px 0 #00230b33',
     width: 12,
     height: 12,
     borderRadius: 6,
