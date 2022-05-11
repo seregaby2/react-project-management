@@ -16,7 +16,9 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
 
     dispatch(SingupSlice.actions.loginFetchingSuccess());
     localStorage.setItem('token', response.data.token);
+    dispatch(SingupSlice.actions.checkAuthUser(true));
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.loginFetchingError(e.message));
+    dispatch(SingupSlice.actions.checkAuthUser(false));
   }
 };
