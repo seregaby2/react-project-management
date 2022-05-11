@@ -2,4 +2,27 @@
 
 .notFoundPage {
   @include flex-column-center-center;
+  max-width: 1920px;
+  width: 100%;
+  gap: 30px 0;
+  img {
+    display: block;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  p {
+    @include text20;
+    text-align: center;
+  }
+
+  a {
+    color: #000;
+    font-weight: 700;
+    transition: 0.4s;
+
+    &:hover {
+      color: $blue;
+    }
+  }
 }

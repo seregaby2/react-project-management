@@ -1,0 +1,44 @@
+@import '../../styles/variables.scss';
+
+.aboutUs {
+  @include flex-align-center;
+  flex-direction: column;
+  width: 100%;
+  border-bottom: 1px #ccc solid;
+  padding-bottom: 20px;
+
+  .container {
+    @include flex-align-center;
+    gap: 10px 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .item {
+      @include flex-column-center-center;
+      @include text20;
+      width: 300px;
+      gap: 10px 0;
+
+      p {
+        @include text20;
+        font-weight: 300;
+      }
+
+      .photo {
+        width: 60%;
+
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  h2 {
+    @include text36;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}

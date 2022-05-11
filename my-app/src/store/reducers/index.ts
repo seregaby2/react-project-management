@@ -1,0 +1,1 @@
+export { reducerIsLogged } from './isLoggedSlice';
