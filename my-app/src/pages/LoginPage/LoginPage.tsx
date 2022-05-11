@@ -5,7 +5,7 @@ import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-for
 import { loginValidation, passwordValidation } from '../../components/validation/validation';
 import styles from './LoginPage.module.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { fetchDataLogin } from '../../store/reducers/actionSignin';
+import { fetchDataLogin } from '../../api/actionSignin';
 import { useNavigate } from 'react-router-dom';
 
 interface ISignInForm {

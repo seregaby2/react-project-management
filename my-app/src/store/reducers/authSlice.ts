@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IPostRequest, ISignInForm } from '../../components/interface';
+import { IPostRequest, ISignInForm } from '../../interfaces/interfaceAuth';
 
 const initialState: IPostRequest = {
   dataAuth: { name: '', login: '', password: '' },
