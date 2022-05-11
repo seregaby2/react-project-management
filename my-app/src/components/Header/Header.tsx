@@ -13,10 +13,12 @@ export const Header = () => {
           Project management
         </Link>
         <nav>
-          <Link to="/login">
+          <Link to="/signup">
             <Button variant="text">sign up</Button>
           </Link>
-          <Button variant="text">log in</Button>
+          <Link to="/login">
+            <Button variant="text">log in</Button>
+          </Link>
         </nav>
       </div>
     </header>
