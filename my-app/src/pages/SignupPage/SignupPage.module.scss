@@ -1,0 +1,18 @@
+.formAuthPage {
+    width: 100%;
+    height: calc(100vh - 160px);
+    background-color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formAuthPageSubtitle {
+    color: #b4b8c1
+}
+
+.formAuthPageForm {
+    max-width: 360px;
+}
