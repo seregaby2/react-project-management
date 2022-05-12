@@ -6,7 +6,6 @@ const initialState: IPostRequest = {
   isLoading: false,
   errorAuth: '',
   errorLogin: '',
-  isAuth: false,
 };
 
 export const SingupSlice = createSlice({
@@ -34,9 +33,6 @@ export const SingupSlice = createSlice({
     },
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {
       state.dataAuth = action.payload;
-    },
-    checkAuthUser(state, actions: PayloadAction<boolean>) {
-      state.isAuth = actions.payload;
     },
   },
 });

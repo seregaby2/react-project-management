@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
 import { loginValidation, passwordValidation } from '../../components/validation/validation';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { ISignInForm } from '../../interfaces/interfaceAuth';
 import { fetchDataLogin } from '../../api/actionSignin';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
-  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
+  const isAuth = localStorage.getItem('checkAuthUser');
   const navigate = useNavigate();
   const { handleSubmit, control } = useForm<ISignInForm>();
   const { errors } = useFormState({
@@ -22,9 +22,9 @@ export function LoginPage() {
     await dispatch(fetchDataLogin(data));
   };
 
-  // useEffect(() => {
-  //   if (isAuth) navigate('/main');
-  // }, [isAuth, navigate]);
+  useEffect(() => {
+    if (isAuth) navigate('/main');
+  }, [isAuth, navigate]);
 
   return (
     <div className={styles.formAuthPage}>

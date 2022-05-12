@@ -20,7 +20,6 @@ interface ISignInForm {
 
 export function SignupPage() {
   const dispatch = useAppDispatch();
-
   const { handleSubmit, reset, control } = useForm<ISignInForm>();
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
     await dispatch(fetchDataAuth(data));

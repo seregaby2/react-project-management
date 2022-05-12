@@ -20,11 +20,9 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
     const decoded = jwtDecode<IResolveToken>(response.data.token);
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('id', decoded.userId);
-
-    dispatch(SingupSlice.actions.checkAuthUser(true));
+    localStorage.setItem('checkAuthUser', 'user autorizated');
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.loginFetchingError(e.message));
-    dispatch(SingupSlice.actions.checkAuthUser(false));
     localStorage.clear();
   }
 };

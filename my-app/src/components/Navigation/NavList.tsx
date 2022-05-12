@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { SwitchLocalization } from '..';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { SingupSlice } from '../../store/reducers/authSlice';
 
 interface INavList {
   handleisOpenMenu?: () => void;
@@ -9,10 +7,7 @@ interface INavList {
 
 export const NavList = ({ handleisOpenMenu }: INavList) => {
   const navigate = useNavigate();
-  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
-  const { checkAuthUser } = SingupSlice.actions;
-  const dispatch = useAppDispatch();
-
+  const isAuth = localStorage.getItem('checkAuthUser');
   const handleToCreateNewBoard = () => {
     //navigate('/????????');
     if (handleisOpenMenu) {
@@ -28,7 +23,7 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
   };
 
   const handleSignOut = () => {
-    dispatch(checkAuthUser(false));
+    localStorage.clear();
     navigate('/');
     if (handleisOpenMenu) {
       handleisOpenMenu();

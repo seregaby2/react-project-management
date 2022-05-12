@@ -1,12 +1,11 @@
 import React from 'react';
 import { Button, ButtonGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../hooks/redux';
 import styles from './SignInSignUp.module.scss';
 
 export const SignInSignUp = () => {
   const navigate = useNavigate();
-  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
+  const isAuth = localStorage.getItem('checkAuthUser');
 
   return (
     <>
