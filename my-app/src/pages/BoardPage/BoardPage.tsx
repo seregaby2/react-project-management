@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BoardControls, Task } from '../../components';
+import { BoardControls, ColumnModal, TaskModal } from '../../components';
 import styles from './BoardPage.module.scss';
 
 export const BoardPage = () => {
@@ -15,7 +15,8 @@ export const BoardPage = () => {
         dicta reprehenderit unde maxime facilis veniam itaque molestias excepturi?
       </p>
       <BoardControls setCreateTask={setCreateTask} setCreateColumn={setCreateColumn} />
-      {createTask && <Task setCreateTask={setCreateTask} />}
+      {createTask && <TaskModal setCreateTask={setCreateTask} />}
+      {createColumn && <ColumnModal setCreateColumn={setCreateColumn} />}
     </main>
   );
 };
