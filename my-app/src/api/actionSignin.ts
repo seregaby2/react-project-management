@@ -16,13 +16,15 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
     });
 
     dispatch(SingupSlice.actions.loginFetchingSuccess());
-    localStorage.setItem('token', response.data.token);
+
     const decoded = jwtDecode<IResolveToken>(response.data.token);
+    localStorage.setItem('token', response.data.token);
     localStorage.setItem('id', decoded.userId);
+
     dispatch(SingupSlice.actions.checkAuthUser(true));
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.loginFetchingError(e.message));
     dispatch(SingupSlice.actions.checkAuthUser(false));
-    localStorage.removeItem('token');
+    localStorage.clear();
   }
 };

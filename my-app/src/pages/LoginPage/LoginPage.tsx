@@ -22,9 +22,9 @@ export function LoginPage() {
     await dispatch(fetchDataLogin(data));
   };
 
-  useEffect(() => {
-    if (isAuth) navigate('/main');
-  }, [isAuth, navigate]);
+  // useEffect(() => {
+  //   if (isAuth) navigate('/main');
+  // }, [isAuth, navigate]);
 
   return (
     <div className={styles.formAuthPage}>

@@ -6,13 +6,13 @@ import styles from './HomePage.module.scss';
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { isLogged } = useAppSelector((state) => state.reducerIsLogged);
+  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
 
   useEffect(() => {
-    if (!isLogged) {
+    if (!isAuth) {
       navigate('/');
     }
-  }, [isLogged, navigate]);
+  }, [isAuth, navigate]);
 
   return (
     <main className={styles.homePage}>

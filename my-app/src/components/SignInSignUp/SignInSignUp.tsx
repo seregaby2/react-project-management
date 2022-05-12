@@ -6,11 +6,11 @@ import styles from './SignInSignUp.module.scss';
 
 export const SignInSignUp = () => {
   const navigate = useNavigate();
-  const { isLogged } = useAppSelector((state) => state.reducerIsLogged);
+  const { isAuth } = useAppSelector((state) => state.reducerSingupRequest);
 
   return (
     <>
-      {isLogged ? (
+      {isAuth ? (
         <nav className={styles.navigation}>
           <Button
             variant="contained"
