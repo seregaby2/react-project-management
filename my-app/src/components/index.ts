@@ -9,3 +9,5 @@ export { NavList } from './Navigation/NavList';
 export { Navigation } from './Navigation/Navigation';
 export { MobileNavigation } from './Navigation/MobileNavigation';
 export { Board } from './Board/Board';
+export { BoardControls } from './/BoardControls/BoardControls';
+export { Task } from './Task/Task';
