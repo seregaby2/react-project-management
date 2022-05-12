@@ -21,3 +21,9 @@ export interface ISingUp {
   name: string;
   login: string;
 }
+
+export interface IResolveToken {
+  userId: string;
+  login: string;
+  iat: string;
+}

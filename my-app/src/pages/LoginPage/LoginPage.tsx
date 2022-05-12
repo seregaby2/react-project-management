@@ -3,16 +3,11 @@ import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
 import { loginValidation, passwordValidation } from '../../components/validation/validation';
-import styles from './LoginPage.module.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { ISignInForm } from '../../interfaces/interfaceAuth';
 import { fetchDataLogin } from '../../api/actionSignin';
 import { useNavigate } from 'react-router-dom';
-
-interface ISignInForm {
-  name: string;
-  login: string;
-  password: string;
-}
+import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
@@ -28,11 +23,9 @@ export function LoginPage() {
   };
 
   useEffect(() => {
-    console.log(isAuth, 'error');
     if (isAuth) navigate('/main');
   }, [isAuth, navigate]);
 
-  console.log(isAuth, 'error2');
   return (
     <div className={styles.formAuthPage}>
       <Typography variant="h4" component="div">
