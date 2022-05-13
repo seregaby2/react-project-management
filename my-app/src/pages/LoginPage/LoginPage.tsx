@@ -18,13 +18,13 @@ export function LoginPage() {
     control,
   });
 
-  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
-    await dispatch(fetchDataLogin(data));
-  };
-
   useEffect(() => {
     if (isAuth) navigate('/main');
   }, [isAuth, navigate]);
+
+  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
+    await dispatch(fetchDataLogin(data));
+  };
 
   return (
     <div className={styles.formAuthPage}>

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import { Button, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
 import { useAppDispatch } from '../../hooks/redux';
 import { fetchDataAuth } from '../../api/actionCreatorAuth';
-import { fetchDataLogin } from '../../api/actionSignin';
+import { useNavigate } from 'react-router-dom';
 import {
   loginValidation,
   nameValidation,
@@ -20,19 +20,20 @@ interface ISignInForm {
 
 export function SignupPage() {
   const dispatch = useAppDispatch();
-  const { handleSubmit, reset, control } = useForm<ISignInForm>();
-  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
-    await dispatch(fetchDataAuth(data));
-    await dispatch(fetchDataLogin(data));
-    reset({
-      name: '',
-      login: '',
-      password: '',
-    });
-  };
+  const { handleSubmit, control } = useForm<ISignInForm>();
+  const isAuth = localStorage.getItem('checkAuthUser');
+  const navigate = useNavigate();
   const { errors } = useFormState({
     control,
   });
+
+  useEffect(() => {
+    if (isAuth) navigate('/main');
+  }, [isAuth, navigate]);
+
+  const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
+    await dispatch(fetchDataAuth(data));
+  };
 
   return (
     <div className={styles.formAuthPage}>

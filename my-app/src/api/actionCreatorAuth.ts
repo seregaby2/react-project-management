@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
+import { fetchDataLogin } from './actionSignin';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -15,6 +16,7 @@ export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDisp
       password: dataAuth.password,
     });
     dispatch(SingupSlice.actions.authFetchingSuccess());
+    await dispatch(fetchDataLogin(dataAuth));
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.authFetchingError(e.message));
   }
