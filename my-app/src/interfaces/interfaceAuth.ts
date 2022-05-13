@@ -3,7 +3,6 @@ export interface IPostRequest {
   isLoading: boolean;
   errorAuth: string;
   errorLogin: string;
-  // isAuth: boolean;
 }
 
 export interface ISignInForm {
