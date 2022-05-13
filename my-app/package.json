@@ -23,6 +23,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "expo-font": "^10.0.5",
     "husky": "^7.0.4",
+    "jwt-decode": "^3.1.2",
     "lint-staged": "^12.3.7",
     "node-sass": "^7.0.1",
     "prettier": "^2.6.0",

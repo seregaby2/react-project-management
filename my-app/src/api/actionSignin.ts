@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { ISignInForm, Itoken } from '../interfaces/interfaceAuth';
+import { IResolveToken, ISignInForm, Itoken } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
+import jwtDecode from 'jwt-decode';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -15,11 +16,13 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
     });
 
     dispatch(SingupSlice.actions.loginFetchingSuccess());
+
+    const decoded = jwtDecode<IResolveToken>(response.data.token);
     localStorage.setItem('token', response.data.token);
-    dispatch(SingupSlice.actions.checkAuthUser(true));
+    localStorage.setItem('id', decoded.userId);
+    localStorage.setItem('checkAuthUser', 'user autorizated');
   } catch (e) {
     if (e instanceof Error) dispatch(SingupSlice.actions.loginFetchingError(e.message));
-    dispatch(SingupSlice.actions.checkAuthUser(false));
-    localStorage.removeItem('token');
+    localStorage.clear();
   }
 };

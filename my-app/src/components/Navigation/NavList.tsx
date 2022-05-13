@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { SwitchLocalization } from '..';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { isLoggedSlice } from '../../store/reducers/isLoggedSlice';
 
 interface INavList {
   handleisOpenMenu?: () => void;
@@ -9,10 +7,7 @@ interface INavList {
 
 export const NavList = ({ handleisOpenMenu }: INavList) => {
   const navigate = useNavigate();
-  const { isLogged } = useAppSelector((state) => state.reducerIsLogged);
-  const { setIsLogged } = isLoggedSlice.actions;
-  const dispatch = useAppDispatch();
-
+  const isAuth = localStorage.getItem('checkAuthUser');
   const handleToCreateNewBoard = () => {
     //navigate('/????????');
     if (handleisOpenMenu) {
@@ -28,7 +23,7 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
   };
 
   const handleSignOut = () => {
-    dispatch(setIsLogged(false));
+    localStorage.clear();
     navigate('/');
     if (handleisOpenMenu) {
       handleisOpenMenu();
@@ -37,9 +32,9 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
 
   return (
     <ul>
-      {isLogged && <li onClick={handleToCreateNewBoard}>Create new board</li>}
-      {isLogged && <li onClick={handleToProfile}>Edit profile</li>}
-      {isLogged && <li onClick={handleSignOut}>Sign out</li>}
+      {isAuth && <li onClick={handleToCreateNewBoard}>Create new board</li>}
+      {isAuth && <li onClick={handleToProfile}>Edit profile</li>}
+      {isAuth && <li onClick={handleSignOut}>Sign out</li>}
       <li>
         <SwitchLocalization />
       </li>

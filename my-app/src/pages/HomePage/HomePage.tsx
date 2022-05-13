@@ -1,19 +1,8 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { AboutUs, SignInSignUp } from '../../components';
-import { useAppSelector } from '../../hooks/redux';
 import styles from './HomePage.module.scss';
 
 export function HomePage() {
-  const navigate = useNavigate();
-  const { isLogged } = useAppSelector((state) => state.reducerIsLogged);
-
-  useEffect(() => {
-    if (!isLogged) {
-      navigate('/');
-    }
-  }, [isLogged, navigate]);
-
   return (
     <main className={styles.homePage}>
       <SignInSignUp />

@@ -1,16 +1,15 @@
 import React from 'react';
 import { Button, ButtonGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../hooks/redux';
 import styles from './SignInSignUp.module.scss';
 
 export const SignInSignUp = () => {
   const navigate = useNavigate();
-  const { isLogged } = useAppSelector((state) => state.reducerIsLogged);
+  const isAuth = localStorage.getItem('checkAuthUser');
 
   return (
     <>
-      {isLogged ? (
+      {isAuth ? (
         <nav className={styles.navigation}>
           <Button
             variant="contained"
