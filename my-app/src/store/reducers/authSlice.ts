@@ -6,6 +6,9 @@ const initialState: IPostRequest = {
   isLoading: false,
   errorAuth: '',
   errorLogin: '',
+  errorUpdateUser: '',
+  errorGetUser: '',
+  errorDeleteUser: '',
 };
 
 export const SingupSlice = createSlice({
@@ -23,6 +26,7 @@ export const SingupSlice = createSlice({
       state.isLoading = true;
       state.errorAuth = action.payload;
     },
+
     loginFetchingSuccess(state) {
       state.isLoading = false;
       state.errorLogin = '';
@@ -31,6 +35,29 @@ export const SingupSlice = createSlice({
       state.isLoading = true;
       state.errorLogin = action.payload;
     },
+
+    updateUserFetchingSuccess(state) {
+      state.isLoading = false;
+      state.errorUpdateUser = '';
+    },
+    updateUserFethingError(state, action: PayloadAction<string>) {
+      state.errorUpdateUser = action.payload;
+    },
+
+    getUserFetchingSuccess(state) {
+      state.isLoading = false;
+    },
+    getUserFetchingError(state, action: PayloadAction<string>) {
+      state.errorGetUser = action.payload;
+    },
+
+    deleteUserFetchingSuccess(state) {
+      state.errorDeleteUser = '';
+    },
+    deleleteUserFetchingError(state, action: PayloadAction<string>) {
+      state.errorDeleteUser = action.payload;
+    },
+
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {
       state.dataAuth = action.payload;
     },
