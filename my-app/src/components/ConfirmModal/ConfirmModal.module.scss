@@ -1,0 +1,54 @@
+@import '../../styles/variables';
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+.confirmModal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  width: 70vw;
+  height: 60vh;
+  border: 1px solid $blue;
+  border-radius: 40px;
+  font-size: 60px;
+  z-index: 10000;
+  justify-content: space-around;
+  @include flex-column;
+  p {
+    text-align: center;
+  }
+}
+.confirmModalBtns {
+  width: 100%;
+  height: 7vh;
+  @include flex-align-center;
+  justify-content: space-around;
+  button {
+    border: 1px solid $blue;
+    border-radius: 20px;
+    background-color: $grey;
+    height: 100%;
+    width: 35%;
+    transition: all 0.35s ease;
+    font-size: 32px;
+    &:hover {
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+    &:first-child:hover {
+      border-color: green;
+    }
+    &:last-child:hover {
+      border-color: red;
+    }
+  }
+}
