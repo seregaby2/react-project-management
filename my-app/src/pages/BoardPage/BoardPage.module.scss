@@ -21,7 +21,7 @@
 
   .columnsContainer {
     display: flex;
-    //background: aqua;
+    z-index: 1;
     padding: 10px;
     max-width: 100%;
     width: 100%;

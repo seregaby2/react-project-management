@@ -6,6 +6,7 @@
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   position: fixed;
+  z-index: 10;
 
   .columnContainer {
     @include flex-column-center-center;

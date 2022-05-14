@@ -13,3 +13,5 @@ export { BoardControls } from './/BoardControls/BoardControls';
 export { TaskModal } from './TaskModal/TaskModal';
 export { ColumnModal } from './ColumnModal/ColumnModal';
 export { Column } from './Column/Column';
+export { Task } from './Task/Task';
+export { EditColumnTitle } from './EditColumnTitle/EditColumnTitle';

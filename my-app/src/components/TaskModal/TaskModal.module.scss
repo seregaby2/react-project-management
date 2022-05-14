@@ -6,9 +6,9 @@
   height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   position: fixed;
+  z-index: 10;
 
   .taskContainer {
-    z-index: 1;
     @include flex-column-center;
     @include text14;
     padding: 10px;

@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+
+.editTitleContainer {
+  @include flex-align-center;
+  width: 200px;
+
+  .buttons {
+    height: 15px;
+    cursor: pointer;
+  }
+
+  .doneBtn {
+    color: $green;
+  }
+
+  .cancelBtn {
+    color: $red;
+  }
+
+  .editTitle {
+    margin-left: 5px;
+    outline: none;
+    padding: 5px;
+    font-weight: 700;
+    border-radius: 5px;
+    width: 145px;
+  }
+}
