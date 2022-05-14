@@ -5,6 +5,7 @@ export interface IPostRequest {
   errorLogin: string;
   errorUpdateUser: string;
   errorGetUser: string;
+  errorDeleteUser: string;
 }
 
 export interface ISignInForm {

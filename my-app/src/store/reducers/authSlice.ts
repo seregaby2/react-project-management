@@ -8,6 +8,7 @@ const initialState: IPostRequest = {
   errorLogin: '',
   errorUpdateUser: '',
   errorGetUser: '',
+  errorDeleteUser: '',
 };
 
 export const SingupSlice = createSlice({
@@ -48,6 +49,13 @@ export const SingupSlice = createSlice({
     },
     getUserFetchingError(state, action: PayloadAction<string>) {
       state.errorGetUser = action.payload;
+    },
+
+    deleteUserFetchingSuccess(state) {
+      state.errorDeleteUser = '';
+    },
+    deleleteUserFetchingError(state, action: PayloadAction<string>) {
+      state.errorDeleteUser = action.payload;
     },
 
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {

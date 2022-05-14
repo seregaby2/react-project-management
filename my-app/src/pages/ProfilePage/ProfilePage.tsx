@@ -7,10 +7,12 @@ import {
   nameValidation,
   passwordValidation,
 } from '../../components/validation/validation';
-import styles from '../SignupPage/SignupPage.module.scss';
 import { fetchUpdateUser } from '../../api/actionUpdateUser';
 import { useAppDispatch } from '../../hooks/redux';
 import { ISingUp } from '../../interfaces/interfaceAuth';
+import { useNavigate } from 'react-router-dom';
+import { fetchDeleteUser } from '../../api/actionDeleteUser';
+import styles from '../SignupPage/SignupPage.module.scss';
 
 interface ISignInForm {
   name: string;
@@ -20,6 +22,7 @@ interface ISignInForm {
 
 export function ProfilePage() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { handleSubmit, reset, control } = useForm<ISignInForm>();
   const { errors } = useFormState({
     control,
@@ -28,11 +31,15 @@ export function ProfilePage() {
   const dataUser: ISingUp = JSON.parse(localStorage.getItem('dataUser') || '');
 
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
-    console.log(data, 'data');
     await dispatch(fetchUpdateUser(data));
     reset({
       password: '',
     });
+  };
+
+  const deleteUser = async () => {
+    await dispatch(fetchDeleteUser());
+    navigate('/');
   };
 
   return (
@@ -129,6 +136,7 @@ export function ProfilePage() {
             variant="contained"
             fullWidth
             color="error"
+            onClick={deleteUser}
             sx={{
               marginTop: 2,
             }}
