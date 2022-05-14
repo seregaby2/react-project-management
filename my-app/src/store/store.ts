@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { reducerSingupRequest } from './reducers/authSlice';
+import { reducerHelpVars } from './reducers/helpVarSlice';
 
 const rootReducer = combineReducers({
   reducerSingupRequest,
+  reducerHelpVars,
 });
 
 export const setupStore = () => {
