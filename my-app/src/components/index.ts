@@ -12,3 +12,4 @@ export { Board } from './Board/Board';
 export { BoardControls } from './/BoardControls/BoardControls';
 export { TaskModal } from './TaskModal/TaskModal';
 export { ColumnModal } from './ColumnModal/ColumnModal';
+export { Column } from './Column/Column';

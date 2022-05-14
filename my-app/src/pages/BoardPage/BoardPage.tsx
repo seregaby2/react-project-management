@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BoardControls, ColumnModal, TaskModal } from '../../components';
+import { BoardControls, Column, ColumnModal, TaskModal } from '../../components';
 import styles from './BoardPage.module.scss';
 
 export const BoardPage = () => {
@@ -17,6 +17,9 @@ export const BoardPage = () => {
       <BoardControls setCreateTask={setCreateTask} setCreateColumn={setCreateColumn} />
       {createTask && <TaskModal setCreateTask={setCreateTask} />}
       {createColumn && <ColumnModal setCreateColumn={setCreateColumn} />}
+      <section className={styles.columnsContainer}>
+        <Column id="test-id" title="test-title" />
+      </section>
     </main>
   );
 };
