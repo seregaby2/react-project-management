@@ -9,13 +9,28 @@ import {
   ProfilePage,
   LoginPage,
 } from '../pages';
+import { RequireAuth } from '../hoc/RequireAuth';
 
 export const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/main" element={<MainPage />} />
-      <Route path="/board" element={<BoardPage />} />
+      <Route
+        path="/main"
+        element={
+          <RequireAuth>
+            <MainPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/board"
+        element={
+          <RequireAuth>
+            <BoardPage />
+          </RequireAuth>
+        }
+      />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/profile" element={<ProfilePage />} />

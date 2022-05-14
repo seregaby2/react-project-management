@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IPostRequest, ISignInForm } from '../../components/interface';
+import { IPostRequest, ISignInForm } from '../../interfaces/interfaceAuth';
 
 const initialState: IPostRequest = {
   dataAuth: { name: '', login: '', password: '' },
   isLoading: false,
   errorAuth: '',
   errorLogin: '',
-  isAuth: false,
 };
 
 export const SingupSlice = createSlice({
@@ -34,9 +33,6 @@ export const SingupSlice = createSlice({
     },
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {
       state.dataAuth = action.payload;
-    },
-    checkAuthUser(state, actions: PayloadAction<boolean>) {
-      state.isAuth = actions.payload;
     },
   },
 });
