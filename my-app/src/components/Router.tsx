@@ -33,7 +33,14 @@ export const Router = () => {
       />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route
+        path="/profile"
+        element={
+          <RequireAuth>
+            <ProfilePage />
+          </RequireAuth>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

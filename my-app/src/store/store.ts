@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { reducerSingupRequest } from './reducers/authSlice';
 import { reducerBoards } from './reducers/boardsSlice';
-
+import { reducerHelpVars } from './reducers/helpVarSlice';
 const rootReducer = combineReducers({
   reducerSingupRequest,
+  reducerHelpVars,
   reducerBoards,
 });
 
