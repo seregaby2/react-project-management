@@ -10,6 +10,7 @@ import {
 import styles from '../SignupPage/SignupPage.module.scss';
 import { fetchUpdateUser } from '../../api/actionUpdateUser';
 import { useAppDispatch } from '../../hooks/redux';
+import { ISingUp } from '../../interfaces/interfaceAuth';
 
 interface ISignInForm {
   name: string;
@@ -19,14 +20,19 @@ interface ISignInForm {
 
 export function ProfilePage() {
   const dispatch = useAppDispatch();
-  const { handleSubmit, control } = useForm<ISignInForm>();
+  const { handleSubmit, reset, control } = useForm<ISignInForm>();
   const { errors } = useFormState({
     control,
   });
 
+  const dataUser: ISingUp = JSON.parse(localStorage.getItem('dataUser') || '');
+
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
     console.log(data, 'data');
     await dispatch(fetchUpdateUser(data));
+    reset({
+      password: '',
+    });
   };
 
   return (
@@ -38,6 +44,7 @@ export function ProfilePage() {
         <Controller
           control={control}
           name="name"
+          defaultValue={dataUser.name || ''}
           rules={nameValidation}
           render={({ field }) => (
             <TextField
@@ -46,7 +53,7 @@ export function ProfilePage() {
               margin="normal"
               fullWidth
               onChange={(e) => field.onChange(e)}
-              value={field.value || ''}
+              value={field.value}
               error={!!errors.name?.message}
               helperText={errors.name?.message}
               FormHelperTextProps={{
@@ -61,6 +68,7 @@ export function ProfilePage() {
         <Controller
           control={control}
           name="login"
+          defaultValue={dataUser.login || ''}
           rules={loginValidation}
           render={({ field }) => (
             <TextField
@@ -69,7 +77,7 @@ export function ProfilePage() {
               margin="normal"
               fullWidth
               onChange={(e) => field.onChange(e)}
-              value={field.value || ''}
+              value={field.value}
               error={!!errors.login?.message}
               helperText={errors.login?.message}
               FormHelperTextProps={{

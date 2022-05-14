@@ -8,7 +8,7 @@ const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch: AppDispatch) => {
   try {
     dispatch(SingupSlice.actions.authFetching());
-    const id = localStorage.getItem('id') || '';
+    const id: string = JSON.parse(localStorage.getItem('dataUser') || '').id;
     const token = localStorage.getItem('token') || '';
     await axios.put<ISingUp>(
       `${baseUrl}/users/${id}`,
