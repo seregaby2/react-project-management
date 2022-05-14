@@ -3,14 +3,14 @@ import styles from './MainFilter.module.scss';
 import { useAppSelector } from '../../hooks/redux';
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { IMainFilterProps } from './IMainFilterProps';
-type FilterType = 'title' | 'description' | 'workers';
+type FilterType = 'title';
 
 const MainFilter = ({ inputHandler }: IMainFilterProps) => {
   const { boards } = useAppSelector((state) => state.reducerBoards);
   const [filter, setFilter] = useState<FilterType>('title');
   useEffect(() => {
     inputHandler(boards);
-  }, []);
+  }, [boards]);
   const searchHandler = (value: string) => {
     inputHandler(boards.filter((board) => board[filter].includes(value)));
   };
