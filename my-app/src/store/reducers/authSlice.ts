@@ -6,6 +6,7 @@ const initialState: IPostRequest = {
   isLoading: false,
   errorAuth: '',
   errorLogin: '',
+  errorUpdateUser: '',
 };
 
 export const SingupSlice = createSlice({
@@ -23,6 +24,7 @@ export const SingupSlice = createSlice({
       state.isLoading = true;
       state.errorAuth = action.payload;
     },
+
     loginFetchingSuccess(state) {
       state.isLoading = false;
       state.errorLogin = '';
@@ -31,6 +33,15 @@ export const SingupSlice = createSlice({
       state.isLoading = true;
       state.errorLogin = action.payload;
     },
+
+    updateUserFetchingSuccess(state) {
+      state.isLoading = false;
+      state.errorUpdateUser = '';
+    },
+    updateUserFethingError(state, action: PayloadAction<string>) {
+      state.errorUpdateUser = action.payload;
+    },
+
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {
       state.dataAuth = action.payload;
     },
