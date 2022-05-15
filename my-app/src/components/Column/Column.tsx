@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Task } from '..';
 import styles from './Column.module.scss';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -10,6 +10,7 @@ import { IColumnRequest } from '../../interfaces/interfaceColumns';
 interface IColumn {
   id: string;
   title: string;
+  setCreateTask: (value: boolean) => void;
 }
 
 const testTasks = [
@@ -66,31 +67,30 @@ const testTasks = [
   },
 ];
 
-export const Column = ({ id, title }: IColumn) => {
+export const Column = ({ id, title, setCreateTask }: IColumn) => {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
-  const { columns } = useAppSelector((store) => store.reducerColumns);
+  const { columns, column } = useAppSelector((store) => store.reducerColumns);
 
   // TODO remove!!!!!
   const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
 
-  const handleIsEditTitle = () => {
-    setIsEditTitle(true);
-  };
+  //const handleIsEditTitle = () => {
+  //  setIsEditTitle(true);
+  //};
 
-  const handleDeleteColumn = (event: MouseEvent<SVGSVGElement>) => {
-    const columnId = event.currentTarget.id;
+  const handleDeleteColumn = () => {
     const deleteDataColumn = {
       boardId: temporaryBoardID,
-      columnId: columnId,
+      columnId: id,
     };
+
     dispatch(deleteColumnAsync(deleteDataColumn));
   };
 
-  const handleAcceptChangingTitle = (event: MouseEvent<SVGSVGElement>) => {
-    const columnId = event.currentTarget.id;
-    const columnData = { ...columns.find((column) => column.id === columnId) };
+  const handleAcceptChangingTitle = () => {
+    const columnData = { ...columns.find((column) => column.id === id) };
     if (columnData) {
       columnData.title = titleText;
     }
@@ -116,23 +116,42 @@ export const Column = ({ id, title }: IColumn) => {
     //Получить список карточек
   }, []);
 
+  //const handleAddTask = () => {
+  //  setCreateTask(true);
+  //};
+
   return (
-    <div className={styles.column}>
+    <div className={styles.column} id={id}>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.addTask}
+          onClick={() => {
+            setCreateTask(true);
+          }}
+        >
+          add task
+        </button>
+        <HighlightOffIcon id={id} onClick={handleDeleteColumn} className={styles.deleteBtn} />
+      </div>
       {isEditTitle && (
         <EditColumnTitle
           id={id}
-          titleText={titleText}
+          titleText={column ? column.title : title}
           handleAcceptChangingTitle={handleAcceptChangingTitle}
           handleCancelChangingTitle={handleCancelChangingTitle}
           handleSetTitleText={handleSetTitleText}
         />
       )}
       {!isEditTitle && (
-        <h4 className={styles.title} onClick={handleIsEditTitle}>
-          {titleText}
+        <h4
+          className={styles.title}
+          onClick={() => {
+            setIsEditTitle(true);
+          }}
+        >
+          {title}
         </h4>
       )}
-      <HighlightOffIcon id={id} onClick={handleDeleteColumn} className={styles.deleteBtn} />
       {testTasks &&
         testTasks.map((task) => {
           return (

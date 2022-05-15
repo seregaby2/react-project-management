@@ -43,7 +43,7 @@ export const ColumnModal = ({ setCreateColumn }: IColumn) => {
       boardId: temporaryBoardID,
       data: {
         title: data.title,
-        order: 9,
+        order: 10,
       },
     };
     dispatch(addColumnAsync(dataToAddColumn));

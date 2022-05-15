@@ -9,12 +9,14 @@ import {
 
 interface IColumnsSlice {
   columns: IColumnRequest[];
+  column: IColumnRequest | null;
   isLoading: boolean;
   error: string;
 }
 
 const initialState: IColumnsSlice = {
   columns: [],
+  column: null,
   isLoading: false,
   error: '',
 };
@@ -59,12 +61,15 @@ export const columnsSlice = createSlice({
     },
     [updateColumTitleAsync.pending.type]: (state) => {
       state.isLoading = true;
+      state.column = null;
     },
-    [updateColumTitleAsync.fulfilled.type]: (state) => {
+    [updateColumTitleAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
       state.isLoading = false;
+      state.column = action.payload;
     },
     [updateColumTitleAsync.rejected.type]: (state) => {
       state.isLoading = false;
+      state.column = null;
     },
   },
 });

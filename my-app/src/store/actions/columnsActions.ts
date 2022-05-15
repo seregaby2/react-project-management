@@ -83,12 +83,17 @@ export const updateColumTitleAsync = createAsyncThunk(
     };
 
     try {
-      await axios.put(`${BASE_URL}/boards/${boardId}/columns/${data.id}`, dataToRequest, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        `${BASE_URL}/boards/${boardId}/columns/${data.id}`,
+        dataToRequest,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       dispatch(getColumnAsync(boardId));
+      return response.data;
     } catch (error) {}
   }
 );

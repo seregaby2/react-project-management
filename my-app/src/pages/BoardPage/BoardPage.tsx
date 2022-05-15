@@ -18,6 +18,9 @@ export const BoardPage = () => {
     dispatch(getColumnAsync(temporaryBoardID));
   }, []);
 
+  const sortedColumns = [...columns];
+  sortedColumns.sort((a, b) => a.order - b.order);
+
   return (
     <main className={styles.boardPage}>
       <h2>Board title</h2>
@@ -26,11 +29,7 @@ export const BoardPage = () => {
         totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur repudiandae, nesciunt
         dicta reprehenderit unde maxime facilis veniam itaque molestias excepturi?
       </p>
-      <BoardControls
-        setCreateTask={setCreateTask}
-        setCreateColumn={setCreateColumn}
-        columns={columns}
-      />
+      <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
       {createTask && <TaskModal setCreateTask={setCreateTask} />}
       {createColumn && <ColumnModal setCreateColumn={setCreateColumn} />}
       {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
@@ -38,9 +37,16 @@ export const BoardPage = () => {
         <div className={styles.columnsContainer}>
           <>
             {columns.length > 0 &&
-              columns.map((column, index) => (
-                <Column key={index} id={column.id} title={column.title} />
-              ))}
+              sortedColumns.map((column, index) => {
+                return (
+                  <Column
+                    key={index}
+                    id={column.id}
+                    title={column.title}
+                    setCreateTask={setCreateTask}
+                  />
+                );
+              })}
           </>
         </div>
       )}
