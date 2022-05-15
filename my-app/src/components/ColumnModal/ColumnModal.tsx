@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import { useForm } from 'react-hook-form';
 import styles from './ColumnModal.module.scss';
+import { useAppDispatch } from '../../hooks/redux';
+import { addColumnAsync } from '../../store/actions/columnsActions';
 
 interface IColumn {
   setCreateColumn: (value: boolean) => void;
@@ -13,6 +15,8 @@ interface IFormColumn {
 }
 
 export const ColumnModal = ({ setCreateColumn }: IColumn) => {
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
@@ -31,14 +35,27 @@ export const ColumnModal = ({ setCreateColumn }: IColumn) => {
     setCreateColumn(false);
   };
 
-  const onSubmit = (data: IFormColumn) => {
+  const handleCreateColumn = (data: IFormColumn) => {
     setCreateColumn(false);
-    console.log(data.title);
+    // TODO remove!!!!!
+    const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
+    const dataToAddColumn = {
+      boardId: temporaryBoardID,
+      data: {
+        title: data.title,
+        order: 9,
+      },
+    };
+    dispatch(addColumnAsync(dataToAddColumn));
   };
 
   return (
     <div className={styles.columnBackground}>
-      <form ref={closeRef} className={styles.columnContainer} onSubmit={handleSubmit(onSubmit)}>
+      <form
+        ref={closeRef}
+        className={styles.columnContainer}
+        onSubmit={handleSubmit(handleCreateColumn)}
+      >
         <label htmlFor="columnTitleModal">Column title</label>
         <input
           {...register('title', {

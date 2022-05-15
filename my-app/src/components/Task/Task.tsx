@@ -6,15 +6,17 @@ import clsx from 'clsx';
 
 interface ITask {
   title: string;
+  order?: number;
   description: string;
+  userId: string;
 }
 
-export const Task = ({ title, description }: ITask) => {
+export const Task = ({ title, description, userId }: ITask) => {
   const handlerEditTask = () => {};
   const handlerDeleteTask = () => {};
 
   return (
-    <div className={styles.taskContainer}>
+    <div className={styles.taskContainer} id={userId}>
       <h5>{title}</h5>
       <p>{description}</p>
       <EditIcon onClick={handlerEditTask} className={clsx(styles.editBtn, styles.button)} />

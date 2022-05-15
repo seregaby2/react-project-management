@@ -2,7 +2,8 @@
 
 .boardControls {
   @include flex-align-center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0 20px;
   width: 250px;
 
   .button {
