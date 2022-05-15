@@ -3,11 +3,14 @@ import { reducerSingupRequest } from './reducers/authSlice';
 import { reducerBoards } from './reducers/boardsSlice';
 import { reducerColumns } from './reducers/columnsSlice';
 import { reducerHelpVars } from './reducers/helpVarSlice';
+import { reducerTasks } from './reducers/tasksSlice';
+
 const rootReducer = combineReducers({
   reducerSingupRequest,
   reducerHelpVars,
   reducerBoards,
   reducerColumns,
+  reducerTasks,
 });
 
 export const setupStore = () => {

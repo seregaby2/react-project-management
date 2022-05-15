@@ -2,9 +2,12 @@ import clsx from 'clsx';
 import React from 'react';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import { useForm } from 'react-hook-form';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { createTaskAsync, ICreateTaskAsync } from '../../store/actions/tasksActions';
+import { getUserIdFromLS } from '../../utils';
 import styles from './TaskModal.module.scss';
 
-interface ITask {
+interface ITaskModal {
   setCreateTask: (value: boolean) => void;
 }
 
@@ -13,7 +16,13 @@ interface IFormTask {
   description: string;
 }
 
-export const TaskModal = ({ setCreateTask }: ITask) => {
+export const TaskModal = ({ setCreateTask }: ITaskModal) => {
+  const dispatch = useAppDispatch();
+  const { activeColumnId } = useAppSelector((state) => state.reducerTasks);
+
+  // TODO remove!!!!!
+  const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
+
   const handleCancelTask = () => {
     setCreateTask(false);
   };
@@ -35,8 +44,17 @@ export const TaskModal = ({ setCreateTask }: ITask) => {
 
   const onSubmit = (data: IFormTask) => {
     setCreateTask(false);
-    console.log(data.title);
-    console.log(data.description);
+    const dataToCreateTask: ICreateTaskAsync = {
+      boardId: temporaryBoardID,
+      columnId: activeColumnId,
+      data: {
+        title: data.title,
+        description: data.description,
+        order: 1,
+        userId: getUserIdFromLS(),
+      },
+    };
+    dispatch(createTaskAsync(dataToCreateTask));
   };
 
   return (

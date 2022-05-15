@@ -36,7 +36,7 @@ export const BoardPage = () => {
       {columns.length > 0 && (
         <div className={styles.columnsContainer}>
           <>
-            {columns.length > 0 &&
+            {sortedColumns.length > 0 &&
               sortedColumns.map((column, index) => {
                 return (
                   <Column

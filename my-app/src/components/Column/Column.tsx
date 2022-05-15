@@ -6,6 +6,8 @@ import { EditColumnTitle } from '../EditColumnTitle/EditColumnTitle';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { deleteColumnAsync, updateColumTitleAsync } from '../../store/actions/columnsActions';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
+import { getAllTasksAsync } from '../../store/actions/tasksActions';
+import { tasksSlice } from '../../store/reducers/tasksSlice';
 
 interface IColumn {
   id: string;
@@ -13,72 +15,26 @@ interface IColumn {
   setCreateTask: (value: boolean) => void;
 }
 
-const testTasks = [
-  {
-    userId: 'asda',
-    order: 1,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description: 'lorem5sdfsdfsdf lorem5sdfsdfsdf lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'asdaa',
-    order: 2,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description: 'lorem5sdfsdfsdf lorem5sdfsdfsdf lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'asssdafa',
-    order: 3,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description: 'lorem5sdfsdfsdf lorem5sdfsdfsdf lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'aaaddfasddfaa',
-    order: 4,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description:
-      'lorem5sdfsdfsdf lorem5sdfsdfsdfzxczxczxczxczxczxczxvzxvzvzxvzxvzxvzxv lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'asfssdafa',
-    order: 5,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description: 'lorem5sdfsdfsdf lorem5sdfsdfsdf lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'aaaddfaasdaa',
-    order: 6,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description:
-      'lorem5sdfsdfsdf lorem5sdfsdfsdfzxczxczxczxczxczxczxvzxvzvzxvzxvzxvzxv lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'asssddaaa',
-    order: 7,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description: 'lorem5sdfsdfsdf lorem5sdfsdfsdf lorem5sdfsdfsdf',
-  },
-  {
-    userId: 'aaaddfsdavsa',
-    order: 8,
-    title: 'sdfffffffffffsdfsdfsfdfs',
-    description:
-      'lorem5sdfsdfsdf lorem5sdfsdfsdfzxczxczxczxczxczxczxvzxvzvzxvzxvzxvzxv lorem5sdfsdfsdf',
-  },
-];
-
 export const Column = ({ id, title, setCreateTask }: IColumn) => {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
   const { columns, column } = useAppSelector((store) => store.reducerColumns);
+  const { tasks } = useAppSelector((state) => state.reducerTasks);
+  const { getActiveColumnId } = tasksSlice.actions;
+
+  const parsedTasks = [...tasks];
 
   // TODO remove!!!!!
   const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
 
-  //const handleIsEditTitle = () => {
-  //  setIsEditTitle(true);
-  //};
+  useEffect(() => {
+    const dataToGetTasks = {
+      boardId: temporaryBoardID,
+      columnId: id,
+    };
+    dispatch(getAllTasksAsync(dataToGetTasks));
+  }, []);
 
   const handleDeleteColumn = () => {
     const deleteDataColumn = {
@@ -112,14 +68,6 @@ export const Column = ({ id, title, setCreateTask }: IColumn) => {
     setTitleText(text);
   };
 
-  useEffect(() => {
-    //Получить список карточек
-  }, []);
-
-  //const handleAddTask = () => {
-  //  setCreateTask(true);
-  //};
-
   return (
     <div className={styles.column} id={id}>
       <div className={styles.buttonContainer}>
@@ -127,6 +75,7 @@ export const Column = ({ id, title, setCreateTask }: IColumn) => {
           className={styles.addTask}
           onClick={() => {
             setCreateTask(true);
+            dispatch(getActiveColumnId(id));
           }}
         >
           add task
@@ -152,17 +101,20 @@ export const Column = ({ id, title, setCreateTask }: IColumn) => {
           {title}
         </h4>
       )}
-      {testTasks &&
-        testTasks.map((task) => {
-          return (
-            <Task
-              key={task.order}
-              title={task.title}
-              description={task.description}
-              userId={task.userId}
-            />
-          );
-        })}
+      {parsedTasks &&
+        parsedTasks
+          .sort((a, b) => a.order - b.order)
+          .filter((task) => task.columnId === id)
+          .map((task) => {
+            return (
+              <Task
+                key={`${task.title}${task.description}`}
+                title={task.title}
+                description={task.description}
+                userId={task.userId}
+              />
+            );
+          })}
     </div>
   );
 };
