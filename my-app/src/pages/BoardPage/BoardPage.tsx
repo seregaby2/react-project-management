@@ -16,7 +16,7 @@ export const BoardPage = () => {
 
   useEffect(() => {
     dispatch(getColumnAsync(temporaryBoardID));
-  }, []);
+  }, [dispatch]);
 
   const sortedColumns = [...columns];
   sortedColumns.sort((a, b) => a.order - b.order);
@@ -41,7 +41,7 @@ export const BoardPage = () => {
                 return (
                   <Column
                     key={index}
-                    id={column.id}
+                    columnId={column.id}
                     title={column.title}
                     setCreateTask={setCreateTask}
                   />

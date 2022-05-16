@@ -10,12 +10,12 @@ import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 
 interface IColumn {
-  id: string;
+  columnId: string;
   title: string;
   setCreateTask: (value: boolean) => void;
 }
 
-export const Column = ({ id, title, setCreateTask }: IColumn) => {
+export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
@@ -34,7 +34,7 @@ export const Column = ({ id, title, setCreateTask }: IColumn) => {
       columnId: id,
     };
     dispatch(getAllTasksAsync(dataToGetTasks));
-  }, []);
+  }, [dispatch, id]);
 
   const handleDeleteColumn = () => {
     const deleteDataColumn = {
@@ -108,6 +108,9 @@ export const Column = ({ id, title, setCreateTask }: IColumn) => {
           .map((task) => {
             return (
               <Task
+                boardId={task.boardId}
+                columnId={task.columnId}
+                taskId={task.id}
                 key={`${task.title}${task.description}`}
                 title={task.title}
                 description={task.description}

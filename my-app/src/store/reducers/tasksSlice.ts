@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ITaskResponse } from '../../interfaces/interfaceTasks';
-import { createTaskAsync, getAllTasksAsync } from '../actions/tasksActions';
+import { createTaskAsync, deleteTaskAsync, getAllTasksAsync } from '../actions/tasksActions';
 
 interface ITaskSlice {
   tasks: ITaskResponse[];
@@ -29,22 +29,13 @@ export const tasksSlice = createSlice({
       state.isLoading = true;
       state.error = '';
     },
-    [getAllTasksAsync.fulfilled.type]: (state, action: PayloadAction<ITaskResponse[]>) => {
+    [getAllTasksAsync.fulfilled.type]: (
+      state,
+      action: PayloadAction<{ data: ITaskResponse[]; columnId: string }>
+    ) => {
       state.isLoading = false;
-      state.tasks = [...state.tasks, ...action.payload].filter(
-        (task, index, self) =>
-          index ===
-          self.findIndex(
-            (temp) =>
-              temp.boardId === task.boardId &&
-              temp.columnId === task.columnId &&
-              temp.description === task.description &&
-              temp.id === task.id &&
-              temp.title === task.title &&
-              temp.userId === task.userId
-          )
-      );
-
+      const filteredTasks = state.tasks.filter((task) => task.columnId !== action.payload.columnId);
+      state.tasks = [...filteredTasks, ...action.payload.data];
       state.error = '';
     },
     [getAllTasksAsync.rejected.type]: (state, action: PayloadAction<string>) => {
@@ -60,6 +51,18 @@ export const tasksSlice = createSlice({
       state.error = '';
     },
     [createTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [deleteTaskAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [deleteTaskAsync.fulfilled.type]: (state) => {
+      state.isLoading = false;
+      state.error = '';
+    },
+    [deleteTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload;
     },

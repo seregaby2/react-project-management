@@ -5,14 +5,14 @@ import { getTokenFromLS } from '../../utils';
 
 const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
 
-interface IGetAllTasks {
+interface IGetAllTasksAsync {
   boardId: string;
   columnId: string;
 }
 
 export const getAllTasksAsync = createAsyncThunk(
   'tasks/getAllTasks',
-  async ({ boardId, columnId }: IGetAllTasks, thunkApi) => {
+  async ({ boardId, columnId }: IGetAllTasksAsync, thunkApi) => {
     const token = getTokenFromLS();
 
     try {
@@ -22,14 +22,14 @@ export const getAllTasksAsync = createAsyncThunk(
         },
       });
 
-      return response.data;
+      return { data: response.data, columnId };
     } catch (error) {
       thunkApi.rejectWithValue('Tasks not found.');
     }
   }
 );
 
-export interface ICreateTaskAsync extends IGetAllTasks {
+export interface ICreateTaskAsync extends IGetAllTasksAsync {
   data: ITaskRequest;
 }
 
@@ -48,6 +48,27 @@ export const createTaskAsync = createAsyncThunk(
       thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
     } catch (error) {
       thunkApi.rejectWithValue('Unable to create task.');
+    }
+  }
+);
+
+export interface IDeleteTaskAsync extends IGetAllTasksAsync {
+  taskId: string;
+}
+
+export const deleteTaskAsync = createAsyncThunk(
+  'tasks/deleteTassk',
+  async ({ boardId, columnId, taskId }: IDeleteTaskAsync, thunkApi) => {
+    const token = getTokenFromLS();
+
+    try {
+      await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
+    } catch (error) {
+      thunkApi.rejectWithValue('Deletion is not possible');
     }
   }
 );
