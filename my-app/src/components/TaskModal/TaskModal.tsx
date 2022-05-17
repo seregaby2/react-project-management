@@ -9,6 +9,7 @@ import styles from './TaskModal.module.scss';
 
 interface ITaskModal {
   setCreateTask: (value: boolean) => void;
+  boardId: string;
 }
 
 interface IFormTask {
@@ -16,12 +17,9 @@ interface IFormTask {
   description: string;
 }
 
-export const TaskModal = ({ setCreateTask }: ITaskModal) => {
+export const TaskModal = ({ setCreateTask, boardId }: ITaskModal) => {
   const dispatch = useAppDispatch();
   const { activeColumnId } = useAppSelector((state) => state.reducerTasks);
-
-  // TODO remove!!!!!
-  const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
 
   const handleCancelTask = () => {
     setCreateTask(false);
@@ -45,7 +43,7 @@ export const TaskModal = ({ setCreateTask }: ITaskModal) => {
   const onSubmit = (data: IFormTask) => {
     setCreateTask(false);
     const dataToCreateTask: ICreateTaskAsync = {
-      boardId: temporaryBoardID,
+      boardId: boardId,
       columnId: activeColumnId,
       data: {
         title: data.title,

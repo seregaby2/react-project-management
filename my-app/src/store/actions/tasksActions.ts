@@ -39,13 +39,17 @@ export const createTaskAsync = createAsyncThunk(
     const token = getTokenFromLS();
 
     try {
-      await axios.post(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
+      return response.data;
     } catch (error) {
       thunkApi.rejectWithValue('Unable to create task.');
     }
@@ -69,6 +73,47 @@ export const deleteTaskAsync = createAsyncThunk(
       thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
     } catch (error) {
       thunkApi.rejectWithValue('Deletion is not possible');
+    }
+  }
+);
+
+export interface IUpdateTaskAsync extends IGetAllTasksAsync {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  taskId: string;
+}
+
+export const updateTaskAsync = createAsyncThunk(
+  'tasks/updateTask',
+  async (
+    { title, order, description, userId, taskId, boardId, columnId }: IUpdateTaskAsync,
+    thunkApi
+  ) => {
+    const token = getTokenFromLS();
+    const dataToUpdateTask = {
+      title: title,
+      order: order,
+      description: description,
+      userId: userId,
+      boardId: boardId,
+      columnId: columnId,
+    };
+
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+        dataToUpdateTask,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
+      return { task: response.data, taskId: taskId };
+    } catch (error) {
+      thunkApi.rejectWithValue('Updating is not possible');
     }
   }
 );

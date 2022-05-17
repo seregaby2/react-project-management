@@ -31,4 +31,24 @@
     right: 0;
     color: $red;
   }
+
+  .editTitle {
+    margin-left: 5px;
+    margin-bottom: 10px;
+    outline: none;
+    padding: 0 5px;
+    font-weight: 700;
+    border-radius: 5px;
+    width: 145px;
+  }
+
+  .editDescription {
+    font-family: Poppins;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+    outline: none;
+    padding: 5px;
+    border-radius: 5px;
+  }
 }

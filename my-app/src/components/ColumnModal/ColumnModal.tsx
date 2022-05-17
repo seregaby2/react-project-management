@@ -8,13 +8,14 @@ import { addColumnAsync } from '../../store/actions/columnsActions';
 
 interface IColumn {
   setCreateColumn: (value: boolean) => void;
+  boardId: string;
 }
 
 interface IFormColumn {
   title: string;
 }
 
-export const ColumnModal = ({ setCreateColumn }: IColumn) => {
+export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
   const dispatch = useAppDispatch();
 
   const {
@@ -37,10 +38,9 @@ export const ColumnModal = ({ setCreateColumn }: IColumn) => {
 
   const handleCreateColumn = (data: IFormColumn) => {
     setCreateColumn(false);
-    // TODO remove!!!!!
-    const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
+
     const dataToAddColumn = {
-      boardId: temporaryBoardID,
+      boardId: boardId,
       data: {
         title: data.title,
         order: 10,

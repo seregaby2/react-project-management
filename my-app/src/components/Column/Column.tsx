@@ -13,9 +13,10 @@ interface IColumn {
   columnId: string;
   title: string;
   setCreateTask: (value: boolean) => void;
+  boardId: string;
 }
 
-export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
+export const Column = ({ columnId, title, setCreateTask, boardId }: IColumn) => {
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
@@ -25,34 +26,31 @@ export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
 
   const parsedTasks = [...tasks];
 
-  // TODO remove!!!!!
-  const temporaryBoardID = 'fee6b47e-3196-44bf-86c8-5cf888d9391b';
-
   useEffect(() => {
     const dataToGetTasks = {
-      boardId: temporaryBoardID,
-      columnId: id,
+      boardId: boardId,
+      columnId: columnId,
     };
     dispatch(getAllTasksAsync(dataToGetTasks));
-  }, [dispatch, id]);
+  }, [dispatch, columnId, boardId]);
 
   const handleDeleteColumn = () => {
     const deleteDataColumn = {
-      boardId: temporaryBoardID,
-      columnId: id,
+      boardId: boardId,
+      columnId: columnId,
     };
 
     dispatch(deleteColumnAsync(deleteDataColumn));
   };
 
   const handleAcceptChangingTitle = () => {
-    const columnData = { ...columns.find((column) => column.id === id) };
+    const columnData = { ...columns.find((column) => column.id === columnId) };
     if (columnData) {
       columnData.title = titleText;
     }
 
     const dataToUpdateColumn = {
-      boardId: temporaryBoardID,
+      boardId: boardId,
       data: columnData as IColumnRequest,
     };
 
@@ -69,22 +67,22 @@ export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
   };
 
   return (
-    <div className={styles.column} id={id}>
+    <div className={styles.column} id={columnId}>
       <div className={styles.buttonContainer}>
         <button
           className={styles.addTask}
           onClick={() => {
             setCreateTask(true);
-            dispatch(getActiveColumnId(id));
+            dispatch(getActiveColumnId(columnId));
           }}
         >
           add task
         </button>
-        <HighlightOffIcon id={id} onClick={handleDeleteColumn} className={styles.deleteBtn} />
+        <HighlightOffIcon id={columnId} onClick={handleDeleteColumn} className={styles.deleteBtn} />
       </div>
       {isEditTitle && (
         <EditColumnTitle
-          id={id}
+          id={columnId}
           titleText={column ? column.title : title}
           handleAcceptChangingTitle={handleAcceptChangingTitle}
           handleCancelChangingTitle={handleCancelChangingTitle}
@@ -103,8 +101,8 @@ export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
       )}
       {parsedTasks &&
         parsedTasks
-          .sort((a, b) => a.order - b.order)
-          .filter((task) => task.columnId === id)
+          //.sort((a, b) => a.order - b.order)
+          .filter((task) => task.columnId === columnId)
           .map((task) => {
             return (
               <Task
@@ -115,6 +113,7 @@ export const Column = ({ columnId: id, title, setCreateTask }: IColumn) => {
                 title={task.title}
                 description={task.description}
                 userId={task.userId}
+                order={task.order}
               />
             );
           })}

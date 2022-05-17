@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ITaskResponse } from '../../interfaces/interfaceTasks';
-import { createTaskAsync, deleteTaskAsync, getAllTasksAsync } from '../actions/tasksActions';
+import {
+  createTaskAsync,
+  deleteTaskAsync,
+  getAllTasksAsync,
+  updateTaskAsync,
+} from '../actions/tasksActions';
 
 interface ITaskSlice {
   tasks: ITaskResponse[];
@@ -46,8 +51,9 @@ export const tasksSlice = createSlice({
       state.isLoading = true;
       state.error = '';
     },
-    [createTaskAsync.fulfilled.type]: (state) => {
+    [createTaskAsync.fulfilled.type]: (state, action: PayloadAction<ITaskResponse>) => {
       state.isLoading = false;
+      state.tasks = [action.payload, ...state.tasks];
       state.error = '';
     },
     [createTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
@@ -63,6 +69,23 @@ export const tasksSlice = createSlice({
       state.error = '';
     },
     [deleteTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [updateTaskAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [updateTaskAsync.fulfilled.type]: (
+      state,
+      action: PayloadAction<{ task: ITaskResponse; taskId: string }>
+    ) => {
+      state.isLoading = false;
+      const taskIndex = state.tasks.findIndex((task) => task.id === action.payload.taskId);
+      state.tasks = [...state.tasks, ...state.tasks.splice(taskIndex, 0, action.payload.task)];
+      state.error = '';
+    },
+    [updateTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = action.payload;
     },

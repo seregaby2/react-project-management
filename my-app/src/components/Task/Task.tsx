@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Task.module.scss';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../hooks/redux';
-import { deleteTaskAsync } from '../../store/actions/tasksActions';
+import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 
 interface ITask {
   title: string;
-  order?: number;
+  order: number;
   description: string;
   userId: string;
   boardId: string;
@@ -16,10 +17,29 @@ interface ITask {
   taskId: string;
 }
 
-export const Task = ({ title, description, userId, boardId, columnId, taskId }: ITask) => {
+export const Task = ({ title, description, userId, order, boardId, columnId, taskId }: ITask) => {
   const dispatch = useAppDispatch();
+  const [isEditTask, setIsEditTask] = useState(false);
+  const [taskTitle, setTaskTitle] = useState(title);
+  const [taskDescription, setTaskDescription] = useState(description);
 
-  const handlerEditTask = () => {};
+  const handlerEditTask = () => {
+    setIsEditTask(true);
+  };
+
+  const handleAcceptEditing = () => {
+    const dataToUpdateTask = {
+      title: taskTitle,
+      order: order,
+      description: taskDescription,
+      userId: userId,
+      boardId: boardId,
+      columnId: columnId,
+      taskId: taskId,
+    };
+    setIsEditTask(false);
+    dispatch(updateTaskAsync(dataToUpdateTask));
+  };
 
   const handlerDeleteTask = () => {
     const dataToDelete = {
@@ -32,9 +52,35 @@ export const Task = ({ title, description, userId, boardId, columnId, taskId }: 
 
   return (
     <div className={styles.taskContainer} id={userId}>
-      <h5>{title}</h5>
-      <p>{description}</p>
-      <EditIcon onClick={handlerEditTask} className={clsx(styles.editBtn, styles.button)} />
+      {!isEditTask && (
+        <>
+          <h5>{title}</h5>
+          <p>{description}</p>
+          <EditIcon onClick={handlerEditTask} className={clsx(styles.editBtn, styles.button)} />
+        </>
+      )}
+
+      {isEditTask && (
+        <>
+          <input
+            type="text"
+            autoFocus
+            defaultValue={taskTitle}
+            className={styles.editTitle}
+            onChange={(e) => {
+              setTaskTitle(e.target.value);
+            }}
+          />
+          <textarea
+            className={styles.editDescription}
+            defaultValue={taskDescription}
+            onChange={(e) => {
+              setTaskDescription(e.target.value);
+            }}
+          />
+          <DoneIcon className={clsx(styles.editBtn, styles.button)} onClick={handleAcceptEditing} />
+        </>
+      )}
       <HighlightOffIcon
         onClick={handlerDeleteTask}
         className={clsx(styles.deleteBtn, styles.button)}

@@ -8,9 +8,8 @@ import styles from './BoardPage.module.scss';
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.reducerColumns);
-
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.reducerColumns);
   const { columns, error } = useAppSelector((state) => state.reducerColumns);
 
   // TODO remove!!!!!
@@ -37,8 +36,10 @@ export const BoardPage = () => {
             excepturi?
           </p>
           <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
-          {createTask && <TaskModal setCreateTask={setCreateTask} />}
-          {createColumn && <ColumnModal setCreateColumn={setCreateColumn} />}
+          {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
+          {createColumn && (
+            <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
+          )}
           {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
           {columns.length > 0 && (
             <div className={styles.columnsContainer}>
@@ -49,6 +50,7 @@ export const BoardPage = () => {
                       <Column
                         key={index}
                         columnId={column.id}
+                        boardId={temporaryBoardID}
                         title={column.title}
                         setCreateTask={setCreateTask}
                       />
