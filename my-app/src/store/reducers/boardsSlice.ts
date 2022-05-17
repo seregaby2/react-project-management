@@ -19,7 +19,6 @@ export const boardsSlice = createSlice({
   reducers: {
     boardsFetchStart(state) {
       state.isLoading = true;
-      console.log(state.isLoading);
     },
     boardsFetchSuccess(state, action: PayloadAction<IBoard[]>) {
       state.boards = action.payload;
