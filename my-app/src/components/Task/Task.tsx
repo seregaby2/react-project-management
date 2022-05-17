@@ -6,6 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../hooks/redux';
 import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
+import useOnclickOutside from 'react-cool-onclickoutside';
 
 interface ITask {
   title: string;
@@ -26,6 +27,10 @@ export const Task = ({ title, description, userId, order, boardId, columnId, tas
   const handlerEditTask = () => {
     setIsEditTask(true);
   };
+
+  const closeOutside = useOnclickOutside(() => {
+    setIsEditTask(false);
+  });
 
   const handleAcceptEditing = () => {
     const dataToUpdateTask = {
@@ -51,7 +56,7 @@ export const Task = ({ title, description, userId, order, boardId, columnId, tas
   };
 
   return (
-    <div className={styles.taskContainer} id={userId}>
+    <div ref={closeOutside} className={styles.taskContainer} id={userId}>
       {!isEditTask && (
         <>
           <h5>{title}</h5>
@@ -65,7 +70,7 @@ export const Task = ({ title, description, userId, order, boardId, columnId, tas
           <input
             type="text"
             autoFocus
-            defaultValue={taskTitle}
+            defaultValue={title}
             className={styles.editTitle}
             onChange={(e) => {
               setTaskTitle(e.target.value);
@@ -73,7 +78,7 @@ export const Task = ({ title, description, userId, order, boardId, columnId, tas
           />
           <textarea
             className={styles.editDescription}
-            defaultValue={taskDescription}
+            defaultValue={description}
             onChange={(e) => {
               setTaskDescription(e.target.value);
             }}

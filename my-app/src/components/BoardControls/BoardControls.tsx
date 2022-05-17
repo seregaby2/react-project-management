@@ -3,7 +3,6 @@ import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import styles from './BoardControls.module.scss';
 
 interface IBoardControl {
-  //setCreateTask: (value: boolean) => void;
   setCreateColumn: (value: boolean) => void;
   columns: IColumnRequest[];
 }
@@ -18,11 +17,6 @@ export const BoardControls = ({ setCreateColumn }: IBoardControl) => {
       <button className={styles.button} onClick={handleAddColumn}>
         add column
       </button>
-      {/*{columns.length > 0 && (
-        <button className={styles.button} onClick={handleAddTask}>
-          add task
-        </button>
-      )}*/}
     </div>
   );
 };

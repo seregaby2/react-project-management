@@ -19,7 +19,12 @@ interface IFormTask {
 
 export const TaskModal = ({ setCreateTask, boardId }: ITaskModal) => {
   const dispatch = useAppDispatch();
-  const { activeColumnId } = useAppSelector((state) => state.reducerTasks);
+  const { activeColumnId, tasks } = useAppSelector((state) => state.reducerTasks);
+
+  let lastOrder: number;
+  if (tasks.length > 0) {
+    lastOrder = [...tasks].sort((a, b) => a.order - b.order)[tasks.length - 1].order + 1;
+  }
 
   const handleCancelTask = () => {
     setCreateTask(false);
@@ -48,7 +53,7 @@ export const TaskModal = ({ setCreateTask, boardId }: ITaskModal) => {
       data: {
         title: data.title,
         description: data.description,
-        order: 1,
+        order: tasks.length === 0 ? 0 : lastOrder,
         userId: getUserIdFromLS(),
       },
     };

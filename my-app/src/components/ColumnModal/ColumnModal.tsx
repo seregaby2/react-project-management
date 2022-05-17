@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import { useForm } from 'react-hook-form';
 import styles from './ColumnModal.module.scss';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { addColumnAsync } from '../../store/actions/columnsActions';
 
 interface IColumn {
@@ -17,6 +17,8 @@ interface IFormColumn {
 
 export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
   const dispatch = useAppDispatch();
+  const { columns } = useAppSelector((state) => state.reducerColumns);
+  const lastOrder = [...columns].sort((a, b) => a.order - b.order)[columns.length - 1].order + 1;
 
   const {
     register,
@@ -43,7 +45,7 @@ export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
       boardId: boardId,
       data: {
         title: data.title,
-        order: 10,
+        order: columns.length === 0 ? 0 : lastOrder,
       },
     };
     dispatch(addColumnAsync(dataToAddColumn));

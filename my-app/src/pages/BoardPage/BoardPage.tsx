@@ -20,7 +20,6 @@ export const BoardPage = () => {
   }, [dispatch]);
 
   const sortedColumns = [...columns];
-  sortedColumns.sort((a, b) => a.order - b.order);
 
   return (
     <main className={styles.boardPage}>

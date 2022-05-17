@@ -33,6 +33,7 @@ main {
 
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -48,4 +49,10 @@ main {
 
 ::-webkit-scrollbar-thumb:hover {
   background: $blue;
+}
+
+@media (max-width: 500px) {
+  main {
+    padding: 0 10px;
+  }
 }
