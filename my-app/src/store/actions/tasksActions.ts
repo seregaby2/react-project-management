@@ -4,6 +4,7 @@ import { ITaskRequest } from '../../interfaces/interfaceTasks';
 import { getTokenFromLS } from '../../utils';
 
 const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
+const TOKEN = getTokenFromLS();
 
 interface IGetAllTasksAsync {
   boardId: string;
@@ -13,12 +14,10 @@ interface IGetAllTasksAsync {
 export const getAllTasksAsync = createAsyncThunk(
   'tasks/getAllTasks',
   async ({ boardId, columnId }: IGetAllTasksAsync, thunkApi) => {
-    const token = getTokenFromLS();
-
     try {
       const response = await axios.get(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${TOKEN}`,
         },
       });
 
@@ -36,15 +35,13 @@ export interface ICreateTaskAsync extends IGetAllTasksAsync {
 export const createTaskAsync = createAsyncThunk(
   'tasks/createTask',
   async ({ boardId, columnId, data }: ICreateTaskAsync, thunkApi) => {
-    const token = getTokenFromLS();
-
     try {
       const response = await axios.post(
         `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`,
         data,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${TOKEN}`,
           },
         }
       );
@@ -63,11 +60,9 @@ export interface IDeleteTaskAsync extends IGetAllTasksAsync {
 export const deleteTaskAsync = createAsyncThunk(
   'tasks/deleteTassk',
   async ({ boardId, columnId, taskId }: IDeleteTaskAsync, thunkApi) => {
-    const token = getTokenFromLS();
-
     try {
       await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${TOKEN}` },
       });
 
       thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
@@ -91,7 +86,6 @@ export const updateTaskAsync = createAsyncThunk(
     { title, order, description, userId, taskId, boardId, columnId }: IUpdateTaskAsync,
     thunkApi
   ) => {
-    const token = getTokenFromLS();
     const dataToUpdateTask = {
       title: title,
       order: order,
@@ -106,7 +100,7 @@ export const updateTaskAsync = createAsyncThunk(
         `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         dataToUpdateTask,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${TOKEN}` },
         }
       );
 

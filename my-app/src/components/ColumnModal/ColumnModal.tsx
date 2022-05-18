@@ -18,7 +18,10 @@ interface IFormColumn {
 export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
   const dispatch = useAppDispatch();
   const { columns } = useAppSelector((state) => state.reducerColumns);
-  const lastOrder = [...columns].sort((a, b) => a.order - b.order)[columns.length - 1].order + 1;
+  let lastOrder: number;
+  if (columns.length > 0) {
+    lastOrder = [...columns].sort((a, b) => a.order - b.order)[columns.length - 1].order + 1;
+  }
 
   const {
     register,
