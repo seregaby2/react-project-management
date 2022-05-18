@@ -1,0 +1,27 @@
+@import '../../styles/variables.scss';
+
+.boardControls {
+  @include flex-align-center;
+  gap: 0 20px;
+  width: 100%;
+
+  .button {
+    @include text14;
+    font-weight: 700;
+    width: 120px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: $blue;
+    background-color: white;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: 2px solid $blue;
+    transition: 0.3s;
+
+    &:hover {
+      color: #fff;
+      background-color: $blue;
+    }
+  }
+}
