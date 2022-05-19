@@ -25,13 +25,7 @@ export const BoardPage = () => {
     const { source, destination } = result;
     if (!destination) return;
 
-    //const [reorderedColumn] = sortedColumns.splice(source.index, 1);
-    //sortedColumns.splice(destination.index, 0, reorderedColumn);
-
-    const draggableColumnId = sortedColumns[source.index].order;
     const replaceableColumnId = sortedColumns[destination.index].order;
-
-    console.log(sortedColumns);
 
     await dispatch(
       updateColumAsync({
@@ -60,19 +54,21 @@ export const BoardPage = () => {
         }
       }
     } else {
-      console.log(2);
+      for (let i = source.index + 1; i <= destination.index; i++) {
+        if (sortedColumns[source.index].id !== sortedColumns[i].id) {
+          await dispatch(
+            updateColumAsync({
+              boardId: temporaryBoardID,
+              data: {
+                id: sortedColumns[i].id,
+                title: sortedColumns[i].title,
+                order: sortedColumns[i].order - 1,
+              },
+            })
+          );
+        }
+      }
     }
-
-    //await dispatch(
-    //  updateColumAsync({
-    //    boardId: temporaryBoardID,
-    //    data: {
-    //      id: sortedColumns[destination.index].id,
-    //      title: sortedColumns[destination.index].title,
-    //      order: draggableColumnId,
-    //    },
-    //  })
-    //);
 
     await dispatch(
       updateColumAsync({
