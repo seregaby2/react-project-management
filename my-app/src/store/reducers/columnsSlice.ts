@@ -57,7 +57,6 @@ export const columnsSlice = createSlice({
     [deleteColumnAsync.fulfilled.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.columns = state.columns.filter((column) => column.id !== action.payload);
-      console.log(state.columns);
     },
     [deleteColumnAsync.rejected.type]: (state) => {
       state.isLoading = false;
