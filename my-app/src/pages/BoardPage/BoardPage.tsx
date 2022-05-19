@@ -2,7 +2,7 @@ import { LinearProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { BoardControls, Column, ColumnModal, TaskModal } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getColumnAsync } from '../../store/actions/columnsActions';
+import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
 import styles from './BoardPage.module.scss';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
@@ -25,8 +25,44 @@ export const BoardPage = () => {
     const { source, destination } = result;
     if (!destination) return;
 
-    const [reorderedColumn] = sortedColumns.splice(source.index, 1);
-    sortedColumns.splice(destination.index, 0, reorderedColumn);
+    //const [reorderedColumn] = sortedColumns.splice(source.index, 1);
+    //sortedColumns.splice(destination.index, 0, reorderedColumn);
+
+    const draggableColumnId = sortedColumns[source.index].order;
+    const replaceableColumnId = sortedColumns[destination.index].order;
+
+    await dispatch(
+      updateColumAsync({
+        boardId: temporaryBoardID,
+        data: {
+          id: sortedColumns[source.index].id,
+          title: sortedColumns[source.index].title,
+          order: -1,
+        },
+      })
+    );
+
+    await dispatch(
+      updateColumAsync({
+        boardId: temporaryBoardID,
+        data: {
+          id: sortedColumns[destination.index].id,
+          title: sortedColumns[destination.index].title,
+          order: draggableColumnId,
+        },
+      })
+    );
+
+    await dispatch(
+      updateColumAsync({
+        boardId: temporaryBoardID,
+        data: {
+          id: sortedColumns[source.index].id,
+          title: sortedColumns[source.index].title,
+          order: replaceableColumnId,
+        },
+      })
+    );
   };
 
   return (

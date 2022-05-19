@@ -9,6 +9,7 @@ import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { Draggable } from 'react-beautiful-dnd';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IColumn {
   columnId: string;
@@ -123,7 +124,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                     boardId={task.boardId}
                     columnId={task.columnId}
                     taskId={task.id}
-                    key={`${task.title}${task.description}`}
+                    key={uuidv4()}
                     title={task.title}
                     description={task.description}
                     userId={task.userId}

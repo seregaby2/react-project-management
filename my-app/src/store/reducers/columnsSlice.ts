@@ -69,7 +69,7 @@ export const columnsSlice = createSlice({
       state.isLoading = false;
       state.column = action.payload;
       const filteredColumns = state.columns.filter((column) => column.id !== action.payload.id);
-      state.columns = [...filteredColumns, action.payload];
+      state.columns = [...filteredColumns, action.payload].sort((a, b) => a.order - b.order);
     },
     [updateColumAsync.rejected.type]: (state) => {
       state.isLoading = false;
