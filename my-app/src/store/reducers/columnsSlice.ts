@@ -33,7 +33,7 @@ export const columnsSlice = createSlice({
     },
     [getColumnAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest[]>) => {
       state.isLoading = false;
-      state.columns = action.payload;
+      state.columns = action.payload.sort((a, b) => a.order - b.order);
       state.error = '';
     },
     [getColumnAsync.rejected.type]: (state, action: PayloadAction<string>) => {
