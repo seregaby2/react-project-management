@@ -23,7 +23,7 @@ export const SingupSlice = createSlice({
       state.errorAuth = '';
     },
     authFetchingError(state, action: PayloadAction<string>) {
-      state.isLoading = true;
+      state.isLoading = false;
       state.errorAuth = action.payload;
     },
 
@@ -32,7 +32,7 @@ export const SingupSlice = createSlice({
       state.errorLogin = '';
     },
     loginFetchingError(state, action: PayloadAction<string>) {
-      state.isLoading = true;
+      state.isLoading = false;
       state.errorLogin = action.payload;
     },
 
@@ -42,6 +42,7 @@ export const SingupSlice = createSlice({
     },
     updateUserFethingError(state, action: PayloadAction<string>) {
       state.errorUpdateUser = action.payload;
+      state.isLoading = false;
     },
 
     getUserFetchingSuccess(state) {
@@ -49,6 +50,7 @@ export const SingupSlice = createSlice({
     },
     getUserFetchingError(state, action: PayloadAction<string>) {
       state.errorGetUser = action.payload;
+      state.isLoading = false;
     },
 
     deleteUserFetchingSuccess(state) {
@@ -56,6 +58,7 @@ export const SingupSlice = createSlice({
     },
     deleleteUserFetchingError(state, action: PayloadAction<string>) {
       state.errorDeleteUser = action.payload;
+      state.isLoading = false;
     },
 
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchDataLogin } from './actionSignin';
+import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -17,7 +19,9 @@ export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDisp
     });
     dispatch(SingupSlice.actions.authFetchingSuccess());
     await dispatch(fetchDataLogin(dataAuth));
-  } catch (e) {
-    if (e instanceof Error) dispatch(SingupSlice.actions.authFetchingError(e.message));
+  } catch (e: any) {
+    dispatch(SingupSlice.actions.authFetchingError(e.message));
+    dispatch(HelpVarSlice.actions.setErrorMessage(e.response.data.message || ''));
+    dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
   }
 };
