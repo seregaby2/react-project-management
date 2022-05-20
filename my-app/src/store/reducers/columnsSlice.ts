@@ -4,7 +4,7 @@ import {
   addColumnAsync,
   deleteColumnAsync,
   getColumnAsync,
-  updateColumTitleAsync,
+  updateColumAsync,
 } from '../actions/columnsActions';
 
 interface IColumnsSlice {
@@ -33,7 +33,7 @@ export const columnsSlice = createSlice({
     },
     [getColumnAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest[]>) => {
       state.isLoading = false;
-      state.columns = action.payload;
+      state.columns = action.payload.sort((a, b) => a.order - b.order);
       state.error = '';
     },
     [getColumnAsync.rejected.type]: (state, action: PayloadAction<string>) => {
@@ -44,8 +44,9 @@ export const columnsSlice = createSlice({
     [addColumnAsync.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [addColumnAsync.fulfilled.type]: (state) => {
+    [addColumnAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
       state.isLoading = false;
+      state.columns = [...state.columns, action.payload];
     },
     [addColumnAsync.rejected.type]: (state) => {
       state.isLoading = false;
@@ -53,23 +54,24 @@ export const columnsSlice = createSlice({
     [deleteColumnAsync.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [deleteColumnAsync.fulfilled.type]: (state) => {
+    [deleteColumnAsync.fulfilled.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+      state.columns = state.columns.filter((column) => column.id !== action.payload);
     },
     [deleteColumnAsync.rejected.type]: (state) => {
       state.isLoading = false;
     },
-    [updateColumTitleAsync.pending.type]: (state) => {
+    [updateColumAsync.pending.type]: (state) => {
       state.isLoading = true;
-      state.column = null;
     },
-    [updateColumTitleAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
+    [updateColumAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
       state.isLoading = false;
       state.column = action.payload;
+      const filteredColumns = state.columns.filter((column) => column.id !== action.payload.id);
+      state.columns = [...filteredColumns, action.payload].sort((a, b) => a.order - b.order);
     },
-    [updateColumTitleAsync.rejected.type]: (state) => {
+    [updateColumAsync.rejected.type]: (state) => {
       state.isLoading = false;
-      state.column = null;
     },
   },
 });

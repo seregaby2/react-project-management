@@ -4,16 +4,15 @@ import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getTokenFromLS } from '../../utils';
 
 const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
+const TOKEN = getTokenFromLS();
 
 export const getColumnAsync = createAsyncThunk(
   'columns/geColumns',
   async (boardId: string, thunkApi) => {
-    const token = getTokenFromLS();
-
     try {
       const response = await axios.get(`${BASE_URL}/boards/${boardId}/columns`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${TOKEN}`,
         },
       });
 
@@ -31,18 +30,18 @@ interface IAddColumn {
 
 export const addColumnAsync = createAsyncThunk(
   'columns/addColumn',
-  async ({ boardId, data }: IAddColumn, { dispatch }) => {
-    const token = getTokenFromLS();
-
+  async ({ boardId, data }: IAddColumn, thunkApi) => {
     try {
-      await axios.post(`${BASE_URL}/boards/${boardId}/columns`, data, {
+      const response = await axios.post(`${BASE_URL}/boards/${boardId}/columns`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${TOKEN}`,
         },
       });
 
-      dispatch(getColumnAsync(boardId));
-    } catch (error) {}
+      return response.data;
+    } catch (error) {
+      thunkApi.rejectWithValue('Unable to create column.');
+    }
   }
 );
 
@@ -53,17 +52,18 @@ interface IDeleteColumn {
 
 export const deleteColumnAsync = createAsyncThunk(
   'columns/deleteColumn',
-  async ({ boardId, columnId }: IDeleteColumn, { dispatch }) => {
-    const token = getTokenFromLS();
+  async ({ boardId, columnId }: IDeleteColumn, thunkApi) => {
     try {
       await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${TOKEN}`,
         },
       });
 
-      dispatch(getColumnAsync(boardId));
-    } catch (error) {}
+      return columnId;
+    } catch (error) {
+      thunkApi.rejectWithValue('Unable to delete column.');
+    }
   }
 );
 
@@ -72,11 +72,9 @@ export interface IUpdateColumnTitle {
   data: IColumnRequest;
 }
 
-export const updateColumTitleAsync = createAsyncThunk(
-  'columns/updateColumnTitle',
-  async ({ boardId, data }: IUpdateColumnTitle, { dispatch }) => {
-    const token = getTokenFromLS();
-
+export const updateColumAsync = createAsyncThunk(
+  'columns/updateTitle',
+  async ({ boardId, data }: IUpdateColumnTitle, thunkApi) => {
     const dataToRequest = {
       title: data.title,
       order: data.order,
@@ -88,12 +86,13 @@ export const updateColumTitleAsync = createAsyncThunk(
         dataToRequest,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${TOKEN}`,
           },
         }
       );
-      dispatch(getColumnAsync(boardId));
       return response.data;
-    } catch (error) {}
+    } catch (error) {
+      thunkApi.rejectWithValue('Unable to update column.');
+    }
   }
 );
