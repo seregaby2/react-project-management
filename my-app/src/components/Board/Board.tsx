@@ -4,6 +4,7 @@ import { IBoardProps } from './IBoardProps';
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 import { useAppDispatch } from '../../hooks/redux';
 import { deleteBoard } from '../../api/deleteBoard';
+import { Link } from 'react-router-dom';
 
 export const Board = ({ title, id }: IBoardProps) => {
   const dispatch = useAppDispatch();
@@ -12,7 +13,7 @@ export const Board = ({ title, id }: IBoardProps) => {
     setShowModal(true);
   };
   return (
-    <>
+    <Link to={`/board/${id}`}>
       <div className={styles.board}>
         <p>{title}</p>
         <button onClick={clickHandler}>x</button>
@@ -31,6 +32,6 @@ export const Board = ({ title, id }: IBoardProps) => {
           }}
         />
       )}
-    </>
+    </Link>
   );
 };
