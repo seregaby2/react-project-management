@@ -13,11 +13,20 @@ export const Board = ({ title, id }: IBoardProps) => {
     e.preventDefault();
     setShowModal(true);
   };
+  const transformTitle = (title: string): string => {
+    const titleArr = title.split(' ');
+    return titleArr.reduce((prev, current) => {
+      if (current.length > 10) {
+        return `${prev} ${current.slice(0, 8)}...`;
+      }
+      return `${prev} ${current}`;
+    }, '');
+  };
   return (
     <>
       <Link to={`/board/${id}`}>
         <div className={styles.board}>
-          <p>{title}</p>
+          <p>{transformTitle(title)}</p>
           <button onClick={(e) => clickHandler(e)}>x</button>
         </div>
       </Link>
