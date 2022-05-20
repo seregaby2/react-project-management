@@ -19,6 +19,7 @@ export const Board = ({ title, id }: IBoardProps) => {
       </div>
       {showModal && (
         <ConfirmModal
+          text={'Are you sure you want to delete the board?'}
           name="main"
           id={id}
           onNo={() => {

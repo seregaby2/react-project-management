@@ -12,9 +12,9 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { ISingUp } from '../../interfaces/interfaceAuth';
 import { useNavigate } from 'react-router-dom';
 import { fetchDeleteUser } from '../../api/actionDeleteUser';
-import { ConfirmalModal } from '../../components/ConfirmalModal/ConfirmalModal';
 import { HelpVarSlice } from '../../store/reducers/helpVarSlice';
 import styles from '../SignupPage/SignupPage.module.scss';
+import { ConfirmModal } from '../../components/ConfirmModal/ConfirmModal';
 
 interface ISignInForm {
   name: string;
@@ -61,10 +61,10 @@ export function ProfilePage() {
       ) : (
         <> */}
       {isConfirmalModal && (
-        <ConfirmalModal
+        <ConfirmModal
           text={'Are you sure you want to delete the user?'}
-          ClickYes={() => deleteUser()}
-          ClickNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
+          onYes={() => deleteUser()}
+          onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
         />
       )}
       <Typography variant="h4" component="div">
