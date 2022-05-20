@@ -9,15 +9,18 @@ import { Link } from 'react-router-dom';
 export const Board = ({ title, id }: IBoardProps) => {
   const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const clickHandler = () => {
+  const clickHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
     setShowModal(true);
   };
   return (
-    <Link to={`/board/${id}`}>
-      <div className={styles.board}>
-        <p>{title}</p>
-        <button onClick={clickHandler}>x</button>
-      </div>
+    <>
+      <Link to={`/board/${id}`}>
+        <div className={styles.board}>
+          <p>{title}</p>
+          <button onClick={(e) => clickHandler(e)}>x</button>
+        </div>
+      </Link>
       {showModal && (
         <ConfirmModal
           text={'Are you sure you want to delete the board?'}
@@ -32,6 +35,6 @@ export const Board = ({ title, id }: IBoardProps) => {
           }}
         />
       )}
-    </Link>
+    </>
   );
 };

@@ -21,7 +21,7 @@ export const CreateBoardForm = ({ hideCreateBoardForm }: ICreateBoardFormProps) 
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h3" component="div">
-          Fill out these fields=)
+          Fill out these field, please=)
         </Typography>
         <Controller
           control={control}
@@ -29,6 +29,7 @@ export const CreateBoardForm = ({ hideCreateBoardForm }: ICreateBoardFormProps) 
           rules={{ required: true, min: 2 }}
           render={({ field }) => (
             <TextField
+              autoFocus
               value={field.value || ''}
               label="title"
               size="small"

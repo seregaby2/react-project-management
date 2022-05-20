@@ -8,6 +8,7 @@
   border-radius: 20px;
   background: $grey;
   transition: all 0.35s ease;
+  color: #000000;
   @include flex-column-center-center;
   &:hover {
     cursor: pointer;
@@ -26,6 +27,7 @@
     border: 1px solid black;
     border-radius: 50%;
     transition: all 0.35s ease;
+    z-index: 10;
     &:hover {
       cursor: pointer;
       border-color: $red;
