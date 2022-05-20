@@ -15,11 +15,11 @@
   padding: 40px;
   transform: translate(-50%, -50%);
   background-color: #ffffff;
-  width: 70vw;
-  height: 60vh;
+  width: 50vw;
+  height: 40vh;
   border: 1px solid $blue;
   border-radius: 40px;
-  font-size: 60px;
+  font-size: 48px;
   z-index: 10000;
   justify-content: space-around;
   @include flex-column;
@@ -49,6 +49,49 @@
     }
     &:last-child:hover {
       border-color: red;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .confirmModal {
+    p {
+      font-size: 36px;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .confirmModal {
+    width: 65vw;
+    p {
+      font-size: 28px;
+    }
+  }
+
+  .confirmModalBtns {
+    button {
+      height: 75%;
+      font-size: 28px;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .confirmModal {
+    padding: 10px;
+    width: 80vw;
+    p {
+      font-size: 28px;
+      line-height: 1.3;
+    }
+  }
+
+  .confirmModalBtns {
+    button {
+      height: 70%;
+      width: 25%;
+      font-size: 22px;
     }
   }
 }

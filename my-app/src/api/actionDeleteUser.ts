@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { ISingUp } from '../interfaces/interfaceAuth';
+import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -20,7 +22,9 @@ export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {
 
     dispatch(SingupSlice.actions.deleteUserFetchingSuccess());
     localStorage.clear();
-  } catch (e) {
-    if (e instanceof Error) dispatch(SingupSlice.actions.deleleteUserFetchingError(e.message));
+  } catch (e: any) {
+    dispatch(SingupSlice.actions.deleleteUserFetchingError(e.message));
+    dispatch(HelpVarSlice.actions.setErrorMessage(e.response.data.message || ''));
+    dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
   }
 };

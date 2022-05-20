@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SwitchLocalization } from '..';
 
@@ -8,8 +9,8 @@ interface INavList {
 export const NavList = ({ handleisOpenMenu }: INavList) => {
   const navigate = useNavigate();
   const isAuth = localStorage.getItem('checkAuthUser');
+
   const handleToCreateNewBoard = () => {
-    //navigate('/????????');
     if (handleisOpenMenu) {
       handleisOpenMenu();
     }
@@ -34,10 +35,10 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
     <ul>
       {isAuth && <li onClick={handleToCreateNewBoard}>Create new board</li>}
       {isAuth && <li onClick={handleToProfile}>Edit profile</li>}
-      {isAuth && <li onClick={handleSignOut}>Sign out</li>}
       <li>
         <SwitchLocalization />
       </li>
+      {isAuth && <li onClick={handleSignOut}>Sign out</li>}
     </ul>
   );
 };

@@ -29,3 +29,16 @@ export interface IResolveToken {
   login: string;
   iat: string;
 }
+
+export interface IMyError {
+  response: IResponse;
+  message: string;
+}
+
+interface IResponse {
+  data: IDataError;
+}
+
+interface IDataError {
+  message: string;
+}
