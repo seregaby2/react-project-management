@@ -8,7 +8,7 @@ import { deleteColumnAsync, updateColumAsync } from '../../store/actions/columns
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
 
 interface IColumn {
@@ -76,59 +76,72 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <div className={styles.buttonContainer}>
-            <button
-              className={styles.addTask}
-              onClick={() => {
-                setCreateTask(true);
-                dispatch(getActiveColumnId(columnId));
-              }}
-            >
-              add task
-            </button>
-            <HighlightOffIcon
-              id={columnId}
-              onClick={handleDeleteColumn}
-              className={styles.deleteBtn}
-            />
-          </div>
-          {isEditTitle && (
-            <EditColumnTitle
-              id={columnId}
-              titleText={title}
-              handleAcceptChangingTitle={handleAcceptChangingTitle}
-              handleCancelChangingTitle={handleCancelChangingTitle}
-              handleSetTitleText={handleSetTitleText}
-            />
-          )}
-          {!isEditTitle && (
-            <h4
-              className={styles.title}
-              onClick={() => {
-                setIsEditTitle(true);
-              }}
-            >
-              {title}
-            </h4>
-          )}
-          {tasks &&
-            [...tasks]
-              .sort((a, b) => (a.order as number) - (b.order as number))
-              .filter((task) => task.columnId === columnId)
-              .map((task) => {
-                return (
-                  <Task
-                    boardId={task.boardId}
-                    columnId={task.columnId}
-                    taskId={task.id}
-                    key={uuidv4()}
-                    title={task.title}
-                    description={task.description}
-                    userId={task.userId}
-                    order={task.order as number}
+          <Droppable droppableId={columnId} type="task">
+            {(provided, snapshot) => (
+              <div
+                className={styles.columnHelper}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                data-is-dragging={snapshot.isDraggingOver}
+              >
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.addTask}
+                    onClick={() => {
+                      setCreateTask(true);
+                      dispatch(getActiveColumnId(columnId));
+                    }}
+                  >
+                    add task
+                  </button>
+                  <HighlightOffIcon
+                    id={columnId}
+                    onClick={handleDeleteColumn}
+                    className={styles.deleteBtn}
                   />
-                );
-              })}
+                </div>
+                {isEditTitle && (
+                  <EditColumnTitle
+                    id={columnId}
+                    titleText={title}
+                    handleAcceptChangingTitle={handleAcceptChangingTitle}
+                    handleCancelChangingTitle={handleCancelChangingTitle}
+                    handleSetTitleText={handleSetTitleText}
+                  />
+                )}
+                {!isEditTitle && (
+                  <h4
+                    className={styles.title}
+                    onClick={() => {
+                      setIsEditTitle(true);
+                    }}
+                  >
+                    {title}
+                  </h4>
+                )}
+                {tasks &&
+                  [...tasks]
+                    .sort((a, b) => (a.order as number) - (b.order as number))
+                    .filter((task) => task.columnId === columnId)
+                    .map((task, index) => {
+                      return (
+                        <Task
+                          index={index}
+                          boardId={task.boardId}
+                          columnId={task.columnId}
+                          taskId={task.id}
+                          key={uuidv4()}
+                          title={task.title}
+                          description={task.description}
+                          userId={task.userId}
+                          order={task.order as number}
+                        />
+                      );
+                    })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
       )}
     </Draggable>
