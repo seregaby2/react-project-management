@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { IResolveToken, ISignInForm, Itoken } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
@@ -6,6 +5,7 @@ import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchGetUser } from '../api/actionGetUser';
 import jwtDecode from 'jwt-decode';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
+import { CreateTextBackEndError } from '../utils/treatmentErrors';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -25,10 +25,14 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
     localStorage.setItem('checkAuthUser', 'user autorizated');
 
     await dispatch(fetchGetUser(decoded.userId));
-  } catch (e: any) {
-    dispatch(SingupSlice.actions.loginFetchingError(e.message));
-    dispatch(HelpVarSlice.actions.setErrorMessage(e.response.data.message || ''));
-    dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
-    localStorage.clear();
+  } catch (e) {
+    if (e instanceof Error) {
+      dispatch(SingupSlice.actions.loginFetchingError(e.message));
+      // dispatch(HelpVarSlice.actions.setErrorMessage(e.message));
+      console.log(e, 'mess');
+      dispatch(CreateTextBackEndError(e.message));
+      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
+      localStorage.clear();
+    }
   }
 };
