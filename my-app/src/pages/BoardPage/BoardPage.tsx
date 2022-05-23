@@ -20,19 +20,25 @@ export const BoardPage = () => {
   }, []);
 
   const onDragEnd = async (result: DropResult) => {
-    const { source, destination } = result;
+    const { source, destination, type } = result;
     if (!destination) return;
 
-    await dispatch(
-      updateColumAsync({
-        boardId: temporaryBoardID,
-        data: {
-          id: columns[source.index].id,
-          title: columns[source.index].title,
-          order: columns[destination.index].order,
-        },
-      })
-    );
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+
+    if (type === 'column') {
+      await dispatch(
+        updateColumAsync({
+          boardId: temporaryBoardID,
+          data: {
+            id: columns[source.index].id,
+            title: columns[source.index].title,
+            order: columns[destination.index].order,
+          },
+        })
+      );
+    }
   };
 
   return (
@@ -55,7 +61,7 @@ export const BoardPage = () => {
           )}
           {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
           {columns.length > 0 && (
-            <Droppable droppableId="columns" direction="horizontal">
+            <Droppable droppableId="columns" direction="horizontal" type="column">
               {(provided) => (
                 <div
                   className={styles.columnsContainer}
