@@ -21,6 +21,13 @@
     gap: 10px 0;
   }
 
+  .columnHelper {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px 0;
+  }
+
   .title {
     display: block;
     @include text14;
