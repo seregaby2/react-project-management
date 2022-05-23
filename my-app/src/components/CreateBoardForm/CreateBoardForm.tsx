@@ -20,17 +20,16 @@ export const CreateBoardForm = ({ hideCreateBoardForm }: ICreateBoardFormProps) 
         onSubmit={handleSubmit(onSubmit)}
         onClick={(e) => e.stopPropagation()}
       >
-        <Typography variant="h3" component="div">
-          Fill out these fields=)
-        </Typography>
+        <h3>Fill out these field, please=)</h3>
         <Controller
           control={control}
           name="title"
           rules={{ required: true, min: 2 }}
           render={({ field }) => (
             <TextField
+              autoFocus
               value={field.value || ''}
-              label="title"
+              label="Title"
               size="small"
               onChange={(e) => field.onChange(e)}
             />

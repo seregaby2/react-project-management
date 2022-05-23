@@ -1,6 +1,8 @@
 @import '../../styles/variables';
 .board {
   position: relative;
+  padding: 10px;
+  overflow: hidden;
   row-gap: 10%;
   width: 25vw;
   height: 20vh;
@@ -8,7 +10,25 @@
   border-radius: 20px;
   background: $grey;
   transition: all 0.35s ease;
+  color: #000000;
+  @include text36;
   @include flex-column-center-center;
+  @media (max-width: 760px) {
+    width: 38vw;
+  }
+  @media (max-width: 550px) {
+    font-size: 28px;
+    line-height: 28px;
+  }
+  @media (max-width: 440px) {
+    font-size: 24px;
+    line-height: 24px;
+  }
+  @media (max-width: 380px) {
+    width: 80vw;
+    font-size: 28px;
+    line-height: 28px;
+  }
   &:hover {
     cursor: pointer;
     background-color: white;
@@ -26,6 +46,7 @@
     border: 1px solid black;
     border-radius: 50%;
     transition: all 0.35s ease;
+    z-index: 10;
     &:hover {
       cursor: pointer;
       border-color: $red;
