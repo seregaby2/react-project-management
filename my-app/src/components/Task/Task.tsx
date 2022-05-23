@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useAppDispatch } from '../../hooks/redux';
 import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 import useOnclickOutside from 'react-cool-onclickoutside';
+import { Draggable } from 'react-beautiful-dnd';
 
 interface ITask {
   title: string;
@@ -16,9 +17,19 @@ interface ITask {
   boardId: string;
   columnId: string;
   taskId: string;
+  index: number;
 }
 
-export const Task = ({ title, description, order, userId, boardId, columnId, taskId }: ITask) => {
+export const Task = ({
+  title,
+  description,
+  order,
+  userId,
+  boardId,
+  columnId,
+  taskId,
+  index,
+}: ITask) => {
   const dispatch = useAppDispatch();
   const [isEditTask, setIsEditTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
@@ -56,42 +67,57 @@ export const Task = ({ title, description, order, userId, boardId, columnId, tas
   };
 
   return (
-    <div ref={closeOutside} className={styles.taskContainer} id={userId}>
-      {!isEditTask && (
-        <>
-          <h5>{title}</h5>
-          <p>{description}</p>
-          <EditIcon onClick={handlerEditTask} className={clsx(styles.editBtn, styles.button)} />
-        </>
-      )}
+    <Draggable draggableId={taskId} index={index}>
+      {(provided, snapshot) => (
+        <div
+          //ref={closeOutside}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          data-is-dragging={snapshot.isDragging}
+          className={styles.taskContainer}
+          id={userId}
+        >
+          {!isEditTask && (
+            <>
+              <h5>{title}</h5>
+              <p>{description}</p>
+              <EditIcon onClick={handlerEditTask} className={clsx(styles.editBtn, styles.button)} />
+            </>
+          )}
 
-      {isEditTask && (
-        <>
-          <input
-            type="text"
-            autoFocus
-            defaultValue={title}
-            className={styles.editTitle}
-            onChange={(e) => {
-              setTaskTitle(e.target.value);
-            }}
-          />
-          <textarea
-            className={styles.editDescription}
-            defaultValue={description}
-            onChange={(e) => {
-              setTaskDescription(e.target.value);
-            }}
-          />
-          <DoneIcon className={clsx(styles.editBtn, styles.button)} onClick={handleAcceptEditing} />
-        </>
+          {isEditTask && (
+            <>
+              <input
+                type="text"
+                autoFocus
+                defaultValue={title}
+                className={styles.editTitle}
+                onChange={(e) => {
+                  setTaskTitle(e.target.value);
+                }}
+              />
+              <textarea
+                className={styles.editDescription}
+                defaultValue={description}
+                onChange={(e) => {
+                  setTaskDescription(e.target.value);
+                }}
+              />
+              <DoneIcon
+                className={clsx(styles.editBtn, styles.button)}
+                onClick={handleAcceptEditing}
+              />
+            </>
+          )}
+          {!isEditTask && (
+            <HighlightOffIcon
+              onClick={handlerDeleteTask}
+              className={clsx(styles.deleteBtn, styles.button)}
+            />
+          )}
+        </div>
       )}
-      {!isEditTask && (
-        <HighlightOffIcon
-          onClick={handlerDeleteTask}
-          className={clsx(styles.deleteBtn, styles.button)}
-        />
-      )}
-    </div>
+    </Draggable>
   );
 };
