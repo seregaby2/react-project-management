@@ -31,6 +31,14 @@ export const Router = () => {
           </RequireAuth>
         }
       />
+      <Route
+        path="/board/:id"
+        element={
+          <RequireAuth>
+            <BoardPage />
+          </RequireAuth>
+        }
+      />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
