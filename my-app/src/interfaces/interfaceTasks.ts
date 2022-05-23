@@ -1,6 +1,6 @@
 export interface ITaskRequest {
   title: string;
-  order: number;
+  order?: number;
   description: string;
   userId: string;
 }

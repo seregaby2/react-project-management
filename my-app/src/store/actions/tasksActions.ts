@@ -1,10 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BASE_URL, TOKEN } from '../../constants/api';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
-import { getTokenFromLS } from '../../utils';
-
-const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
-const TOKEN = getTokenFromLS();
 
 interface IGetAllTasksAsync {
   boardId: string;
@@ -74,7 +71,7 @@ export const deleteTaskAsync = createAsyncThunk(
 
 export interface IUpdateTaskAsync extends IGetAllTasksAsync {
   title: string;
-  order: number;
+  order?: number;
   description: string;
   userId: string;
   taskId: string;
@@ -103,9 +100,7 @@ export const updateTaskAsync = createAsyncThunk(
           headers: { Authorization: `Bearer ${TOKEN}` },
         }
       );
-
-      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
-      return { task: response.data, taskId: taskId };
+      return { task: response.data, columnId: columnId };
     } catch (error) {
       thunkApi.rejectWithValue('Updating is not possible');
     }

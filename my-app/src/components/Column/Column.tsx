@@ -23,11 +23,9 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
-  const { columns, column } = useAppSelector((store) => store.reducerColumns);
+  const { columns } = useAppSelector((store) => store.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
   const { getActiveColumnId } = tasksSlice.actions;
-
-  const parsedTasks = [...tasks];
 
   useEffect(() => {
     const dataToGetTasks = {
@@ -35,14 +33,13 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
       columnId: columnId,
     };
     dispatch(getAllTasksAsync(dataToGetTasks));
-  }, [dispatch, columnId, boardId]);
+  }, []);
 
   const handleDeleteColumn = () => {
     const deleteDataColumn = {
       boardId: boardId,
       columnId: columnId,
     };
-
     dispatch(deleteColumnAsync(deleteDataColumn));
   };
 
@@ -98,7 +95,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
           {isEditTitle && (
             <EditColumnTitle
               id={columnId}
-              titleText={column ? column.title : title}
+              titleText={title}
               handleAcceptChangingTitle={handleAcceptChangingTitle}
               handleCancelChangingTitle={handleCancelChangingTitle}
               handleSetTitleText={handleSetTitleText}
@@ -114,9 +111,9 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
               {title}
             </h4>
           )}
-          {parsedTasks &&
-            parsedTasks
-              //.sort((a, b) => a.order - b.order)
+          {tasks &&
+            [...tasks]
+              .sort((a, b) => (a.order as number) - (b.order as number))
               .filter((task) => task.columnId === columnId)
               .map((task) => {
                 return (
@@ -128,7 +125,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                     title={task.title}
                     description={task.description}
                     userId={task.userId}
-                    order={task.order}
+                    order={task.order as number}
                   />
                 );
               })}

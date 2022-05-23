@@ -32,7 +32,7 @@ export const Router = () => {
         }
       />
       <Route
-        path="/board/:id"
+        path="/board/:boardId"
         element={
           <RequireAuth>
             <BoardPage />
