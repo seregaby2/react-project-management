@@ -1,10 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BASE_URL, TOKEN } from '../../constants/api';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
-import { getTokenFromLS } from '../../utils';
-
-const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
-const TOKEN = getTokenFromLS();
 
 export const getColumnAsync = createAsyncThunk(
   'columns/geColumns',
@@ -25,7 +22,10 @@ export const getColumnAsync = createAsyncThunk(
 
 interface IAddColumn {
   boardId: string;
-  data: { title: string; order: number };
+  data: {
+    title: string;
+    //order: number
+  };
 }
 
 export const addColumnAsync = createAsyncThunk(
@@ -81,16 +81,14 @@ export const updateColumAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.put(
-        `${BASE_URL}/boards/${boardId}/columns/${data.id}`,
-        dataToRequest,
-        {
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-          },
-        }
-      );
-      return response.data;
+      //const response =
+      await axios.put(`${BASE_URL}/boards/${boardId}/columns/${data.id}`, dataToRequest, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      });
+      thunkApi.dispatch(getColumnAsync(boardId));
+      //return response.data;
     } catch (error) {
       thunkApi.rejectWithValue('Unable to update column.');
     }

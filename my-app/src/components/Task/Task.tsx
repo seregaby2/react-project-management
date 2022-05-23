@@ -18,7 +18,7 @@ interface ITask {
   taskId: string;
 }
 
-export const Task = ({ title, description, userId, order, boardId, columnId, taskId }: ITask) => {
+export const Task = ({ title, description, order, userId, boardId, columnId, taskId }: ITask) => {
   const dispatch = useAppDispatch();
   const [isEditTask, setIsEditTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
@@ -86,10 +86,12 @@ export const Task = ({ title, description, userId, order, boardId, columnId, tas
           <DoneIcon className={clsx(styles.editBtn, styles.button)} onClick={handleAcceptEditing} />
         </>
       )}
-      <HighlightOffIcon
-        onClick={handlerDeleteTask}
-        className={clsx(styles.deleteBtn, styles.button)}
-      />
+      {!isEditTask && (
+        <HighlightOffIcon
+          onClick={handlerDeleteTask}
+          className={clsx(styles.deleteBtn, styles.button)}
+        />
+      )}
     </div>
   );
 };

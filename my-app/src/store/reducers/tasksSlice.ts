@@ -78,11 +78,20 @@ export const tasksSlice = createSlice({
     },
     [updateTaskAsync.fulfilled.type]: (
       state,
-      action: PayloadAction<{ task: ITaskResponse; taskId: string }>
+      action: PayloadAction<{ task: ITaskResponse; columnId: string }>
     ) => {
       state.isLoading = false;
-      const taskIndex = state.tasks.findIndex((task) => task.id === action.payload.taskId);
-      state.tasks = [...state.tasks, ...state.tasks.splice(taskIndex, 0, action.payload.task)];
+      const taskFiltered = [
+        ...state.tasks
+          .filter((task) => task.columnId === action.payload.columnId)
+          .filter((task) => task.id !== action.payload.task.id),
+        action.payload.task,
+      ].sort((a, b) => (a.order as number) - (b.order as number));
+
+      state.tasks = [
+        ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+        ...taskFiltered,
+      ];
       state.error = '';
     },
     [updateTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
