@@ -22,7 +22,7 @@
   }
 
   .columnHelper {
-    overflow-y: auto;
+    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px 0;

@@ -5,7 +5,12 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
 import styles from './BoardPage.module.scss';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { updateTaskAsync } from '../../store/actions/tasksActions';
+import {
+  createTaskAsync,
+  deleteTaskAsync,
+  updateTaskAsync,
+} from '../../store/actions/tasksActions';
+import { tasksSlice } from '../../store/reducers/tasksSlice';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
@@ -13,6 +18,7 @@ export const BoardPage = () => {
   const dispatch = useAppDispatch();
   const { columns, isLoading, error } = useAppSelector((state) => state.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
+  const { deleteTaskFromState } = tasksSlice.actions;
 
   // TODO remove!!!!!
   const temporaryBoardID = 'e1878d40-0f75-46b9-a043-dd89110101cb';
@@ -46,9 +52,9 @@ export const BoardPage = () => {
       const home = [...tasks]
         .filter((task) => task.columnId === source.droppableId)
         .sort((a, b) => (a.order as number) - (b.order as number));
-      const foreign = [...tasks]
-        .filter((task) => task.columnId === destination.droppableId)
-        .sort((a, b) => (a.order as number) - (b.order as number));
+      //const foreign = [...tasks]
+      //  .filter((task) => task.columnId === destination.droppableId)
+      //  .sort((a, b) => (a.order as number) - (b.order as number));
       if (source.droppableId === destination.droppableId) {
         const dataToUpdateTask = {
           title: home[source.index].title,
