@@ -81,17 +81,56 @@ export const tasksSlice = createSlice({
       action: PayloadAction<{ task: ITaskResponse; columnId: string }>
     ) => {
       state.isLoading = false;
-      const taskFiltered = [
-        ...state.tasks
-          .filter((task) => task.columnId === action.payload.columnId)
-          .filter((task) => task.id !== action.payload.task.id),
-        action.payload.task,
-      ].sort((a, b) => (a.order as number) - (b.order as number));
 
-      state.tasks = [
-        ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
-        ...taskFiltered,
-      ];
+      let taskFromColumnFiltered = [
+        ...state.tasks.filter((task) => task.columnId === action.payload.columnId),
+      ].sort((a, b) => (a.order as number) - (b.order as number));
+      const prevOrder = [...state.tasks].find((task) => task.id === action.payload.task.id)
+        ?.order as number;
+      const currentOrder = action.payload.task.order as number;
+      if (currentOrder !== prevOrder) {
+        // Если ордер в ходе апдейта изменился!!!
+        if (currentOrder < prevOrder) {
+          for (let i = currentOrder - 1; i < prevOrder - 1; i++) {
+            (taskFromColumnFiltered[i].order as number) += 1;
+          }
+          taskFromColumnFiltered = [
+            ...taskFromColumnFiltered.filter((task) => task.id !== action.payload.task.id),
+            action.payload.task,
+          ].sort((a, b) => (a.order as number) - (b.order as number));
+          state.tasks = [
+            ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+            ...taskFromColumnFiltered,
+          ];
+        }
+        if (currentOrder > prevOrder) {
+          for (let i = prevOrder; i < currentOrder; i++) {
+            (taskFromColumnFiltered[i].order as number) -= 1;
+          }
+          taskFromColumnFiltered = [
+            ...taskFromColumnFiltered.filter((task) => task.id !== action.payload.task.id),
+            action.payload.task,
+          ].sort((a, b) => (a.order as number) - (b.order as number));
+          state.tasks = [
+            ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+            ...taskFromColumnFiltered,
+          ];
+        }
+      } else {
+        // Если ордер в ходе апдейта не изменился
+        const taskFiltered = [
+          ...state.tasks
+            .filter((task) => task.columnId === action.payload.columnId)
+            .filter((task) => task.id !== action.payload.task.id),
+          action.payload.task,
+        ].sort((a, b) => (a.order as number) - (b.order as number));
+
+        state.tasks = [
+          ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+          ...taskFiltered,
+        ];
+      }
+
       state.error = '';
     },
     [updateTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {

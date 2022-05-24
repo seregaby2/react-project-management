@@ -5,12 +5,14 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
 import styles from './BoardPage.module.scss';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { updateTaskAsync } from '../../store/actions/tasksActions';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
   const dispatch = useAppDispatch();
   const { columns, isLoading, error } = useAppSelector((state) => state.reducerColumns);
+  const { tasks } = useAppSelector((state) => state.reducerTasks);
 
   // TODO remove!!!!!
   const temporaryBoardID = '3bb70797-691d-436e-a420-94032e91fa10';
@@ -38,6 +40,27 @@ export const BoardPage = () => {
           },
         })
       );
+    }
+
+    if (type === 'task') {
+      const home = [...tasks]
+        .filter((task) => task.columnId === source.droppableId)
+        .sort((a, b) => (a.order as number) - (b.order as number));
+      const foreign = [...tasks]
+        .filter((task) => task.columnId === destination.droppableId)
+        .sort((a, b) => (a.order as number) - (b.order as number));
+      if (source.droppableId === destination.droppableId) {
+        const dataToUpdateTask = {
+          title: home[source.index].title,
+          order: home[destination.index].order,
+          description: home[source.index].description,
+          userId: home[source.index].userId,
+          boardId: home[source.index].boardId,
+          columnId: home[source.index].columnId,
+          taskId: home[source.index].id,
+        };
+        await dispatch(updateTaskAsync(dataToUpdateTask));
+      }
     }
   };
 
