@@ -49,7 +49,6 @@ export const BoardPage = () => {
       const foreign = [...tasks]
         .filter((task) => task.columnId === destination.droppableId)
         .sort((a, b) => (a.order as number) - (b.order as number));
-
       if (source.droppableId === destination.droppableId) {
         const dataToUpdateTask = {
           title: home[source.index].title,
