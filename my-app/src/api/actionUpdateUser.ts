@@ -30,7 +30,6 @@ export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch:
     dispatch(SingupSlice.actions.updateUserFetchingSuccess());
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e, 'mess');
       dispatch(CreateTextBackEndError(e.message));
       dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
     }

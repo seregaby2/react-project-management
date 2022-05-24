@@ -6,7 +6,6 @@ const CONFLICT = 'Request failed with status code 409';
 const AUTHORIZATION = 'Request failed with status code 401';
 
 export const CreateTextBackEndError = (error: string) => (dispatch: AppDispatch) => {
-  console.log(error, 'error');
   switch (error) {
     case NOT_FOUND:
       dispatch(HelpVarSlice.actions.setErrorMessage('Data was not founded'));

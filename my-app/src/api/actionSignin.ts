@@ -28,8 +28,6 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
   } catch (e) {
     if (e instanceof Error) {
       dispatch(SingupSlice.actions.loginFetchingError(e.message));
-      // dispatch(HelpVarSlice.actions.setErrorMessage(e.message));
-      console.log(e, 'mess');
       dispatch(CreateTextBackEndError(e.message));
       dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
       localStorage.clear();

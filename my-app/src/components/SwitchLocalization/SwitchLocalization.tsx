@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
+
+import i18next from 'i18next';
+
 import styles from './SwitchLocalization.module.scss';
+import { useState } from 'react';
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -45,10 +49,34 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export const SwitchLocalization = () => {
+  const [isEnglishLanguage, setIsEnglishLanguage] = useState(true);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('i18nextLng') === 'ru') {
+      setIsEnglishLanguage(false);
+    } else {
+      setIsEnglishLanguage(true);
+    }
+  }, [isEnglishLanguage]);
+
+  const handleChangeLanguage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      i18next.changeLanguage('en');
+      setIsEnglishLanguage(true);
+    } else {
+      i18next.changeLanguage('ru');
+      setIsEnglishLanguage(false);
+    }
+  };
+
   return (
     <div className={styles.switch}>
       <p>Rus</p>
-      <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+      <AntSwitch
+        checked={isEnglishLanguage}
+        inputProps={{ 'aria-label': 'ant design' }}
+        onChange={handleChangeLanguage}
+      />
       <p>En</p>
     </div>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
@@ -25,7 +24,6 @@ export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {
     localStorage.clear();
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e, 'mess');
       dispatch(CreateTextBackEndError(e.message));
       dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
     }
