@@ -61,8 +61,6 @@ export const deleteTaskAsync = createAsyncThunk(
       await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
-
-      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
     } catch (error) {
       thunkApi.rejectWithValue('Deletion is not possible');
     }
