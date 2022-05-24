@@ -28,6 +28,9 @@ export const tasksSlice = createSlice({
     getActiveColumnId(state, action: PayloadAction<string>) {
       state.activeColumnId = action.payload;
     },
+    deleteTaskFromState(state, action: PayloadAction<string>) {
+      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+    },
   },
   extraReducers: {
     [getAllTasksAsync.pending.type]: (state) => {
