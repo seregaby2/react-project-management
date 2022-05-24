@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 import { fetchDataLogin } from './actionSignin';
+import { CreateTextBackEndError } from '../utils/treatmentErrors';
 
 const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
 
@@ -28,9 +28,11 @@ export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch:
     );
     await dispatch(fetchDataLogin(dataUpdateUser));
     dispatch(SingupSlice.actions.updateUserFetchingSuccess());
-  } catch (e: any) {
-    dispatch(SingupSlice.actions.updateUserFethingError(e.message));
-    dispatch(HelpVarSlice.actions.setErrorMessage(e.response.data.message || ''));
-    dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e, 'mess');
+      dispatch(CreateTextBackEndError(e.message));
+      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
+    }
   }
 };
