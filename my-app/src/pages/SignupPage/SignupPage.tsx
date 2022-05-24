@@ -5,6 +5,8 @@ import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-for
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchDataAuth } from '../../api/actionCreatorAuth';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import {
   loginValidation,
   nameValidation,
@@ -24,6 +26,7 @@ export function SignupPage() {
   const { handleSubmit, control } = useForm<ISignInForm>();
   const isAuth = localStorage.getItem('checkAuthUser');
   const navigate = useNavigate();
+  const { t } = useTranslation(['signup']);
   const { errors } = useFormState({
     control,
   });
@@ -46,7 +49,7 @@ export function SignupPage() {
       ) : (
         <>
           <Typography variant="h4" component="div">
-            Sign up
+            {t('signUp')}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -54,7 +57,7 @@ export function SignupPage() {
             gutterBottom={true}
             className={styles.formAuthPageSubtitle}
           >
-            to get access
+            {t('toGetaccess')}
           </Typography>
           <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>
             <Controller
@@ -63,7 +66,7 @@ export function SignupPage() {
               rules={nameValidation}
               render={({ field }) => (
                 <TextField
-                  label="name"
+                  label={t('name')}
                   size="small"
                   margin="normal"
                   fullWidth
@@ -86,7 +89,7 @@ export function SignupPage() {
               rules={loginValidation}
               render={({ field }) => (
                 <TextField
-                  label="login"
+                  label={t('login')}
                   size="small"
                   margin="normal"
                   fullWidth
@@ -110,7 +113,7 @@ export function SignupPage() {
               render={({ field }) => (
                 <TextField
                   type="password"
-                  label="password"
+                  label={t('password')}
                   size="small"
                   margin="normal"
                   fullWidth
@@ -135,7 +138,7 @@ export function SignupPage() {
                 marginTop: 2,
               }}
             >
-              register
+              {t('register')}
             </Button>
           </form>
         </>

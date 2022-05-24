@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { ISignInForm } from '../../interfaces/interfaceAuth';
 import { fetchDataLogin } from '../../api/actionSignin';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
@@ -15,6 +17,7 @@ export function LoginPage() {
   const isAuth = localStorage.getItem('checkAuthUser');
   const navigate = useNavigate();
   const { handleSubmit, control } = useForm<ISignInForm>();
+  const { t } = useTranslation(['signin']);
   const { errors } = useFormState({
     control,
   });
@@ -37,7 +40,7 @@ export function LoginPage() {
       ) : (
         <>
           <Typography variant="h4" component="div">
-            Log in
+            {t('logIn')}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -45,7 +48,7 @@ export function LoginPage() {
             gutterBottom={true}
             className={styles.formAuthPageSubtitle}
           >
-            to get access
+            {t('toGetaccess')}
           </Typography>
           <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>
             <Controller
@@ -54,7 +57,7 @@ export function LoginPage() {
               rules={loginValidation}
               render={({ field }) => (
                 <TextField
-                  label="login"
+                  label={t('login')}
                   size="small"
                   margin="normal"
                   fullWidth
@@ -78,7 +81,7 @@ export function LoginPage() {
               render={({ field }) => (
                 <TextField
                   type="password"
-                  label="password"
+                  label={t('password')}
                   size="small"
                   margin="normal"
                   fullWidth
@@ -102,7 +105,7 @@ export function LoginPage() {
                 marginTop: 2,
               }}
             >
-              enter
+              {t('enter')}
             </Button>
           </form>
         </>
