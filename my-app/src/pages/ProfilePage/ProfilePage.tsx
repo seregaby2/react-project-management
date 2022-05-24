@@ -29,7 +29,7 @@ export function ProfilePage() {
   const { isConfirmalModal } = useAppSelector((state) => state.reducerHelpVars);
   const navigate = useNavigate();
   const { handleSubmit, reset, control } = useForm<ISignInForm>();
-  const { t } = useTranslation(['editProfile']);
+  const { t } = useTranslation(['editProfile', 'confirmModal']);
   const { errors } = useFormState({
     control,
   });
@@ -64,7 +64,7 @@ export function ProfilePage() {
         <> */}
       {isConfirmalModal && (
         <ConfirmModal
-          text={'Are you sure you want to delete the user?'}
+          text={t('deleteUserModal', { ns: 'confirmModal' })}
           onYes={() => deleteUser()}
           onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
         />

@@ -3,11 +3,15 @@ import styles from './MainFilter.module.scss';
 import { useAppSelector } from '../../hooks/redux';
 import { FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { IMainFilterProps } from './IMainFilterProps';
+import { useTranslation } from 'react-i18next';
+
 type FilterType = 'title';
 
 const MainFilter = ({ inputHandler }: IMainFilterProps) => {
   const { boards } = useAppSelector((state) => state.reducerBoards);
   const [filter, setFilter] = useState<FilterType>('title');
+  const { t } = useTranslation(['mainPage']);
+
   useEffect(() => {
     inputHandler(boards);
   }, [boards]);
@@ -19,20 +23,20 @@ const MainFilter = ({ inputHandler }: IMainFilterProps) => {
       <FormGroup row className={styles.filterGroup}>
         <FormControl fullWidth className={styles.filterInput}>
           <TextField
-            placeholder="Search..."
+            placeholder={t('search')}
             type="text"
             onChange={(e) => searchHandler(e.target.value)}
           />
         </FormControl>
         <FormControl className={styles.filterSelect}>
-          <InputLabel>Filter</InputLabel>
+          <InputLabel>{t('filter')}</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             value={filter}
-            label="Filter"
+            label={t('filter')}
             onChange={(e) => setFilter(e.target.value as FilterType)}
           >
-            <MenuItem value={'title'}>Title</MenuItem>
+            <MenuItem value={'title'}>{t('title')}</MenuItem>
           </Select>
         </FormControl>
       </FormGroup>
