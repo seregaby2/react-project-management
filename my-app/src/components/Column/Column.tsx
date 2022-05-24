@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Task } from '..';
+import { EditColumnTitle, Task } from '..';
 import styles from './Column.module.scss';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { EditColumnTitle } from '../EditColumnTitle/EditColumnTitle';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { deleteColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { v4 as uuidv4 } from 'uuid';
 
 interface IColumn {
   columnId: string;
@@ -130,7 +128,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                           boardId={task.boardId}
                           columnId={task.columnId}
                           taskId={task.id}
-                          key={uuidv4()}
+                          key={task.id}
                           title={task.title}
                           description={task.description}
                           userId={task.userId}
