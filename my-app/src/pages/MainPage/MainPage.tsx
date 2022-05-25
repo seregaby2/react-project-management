@@ -3,6 +3,7 @@ import styles from './MainPage.module.scss';
 import { Board } from '../../components';
 import { CreateBoardForm } from '../../components/CreateBoardForm/CreateBoardForm';
 import MainFilter from '../../components/MainFilter/MainFilter';
+import { useTranslation } from 'react-i18next';
 import { Button, LinearProgress, Typography } from '@mui/material';
 import { IBoard } from '../../interfaces/IBoard';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -13,6 +14,8 @@ export const MainPage = () => {
   const { isLoading } = useAppSelector((state) => state.reducerBoards);
   const [visibleBoards, setVisibleBoards] = useState<IBoard[]>([]);
   const [showCreateBoardForm, setShowCreateBoardForm] = useState<boolean>(false);
+  const { t } = useTranslation(['mainPage']);
+
   useEffect(() => {
     dispatch(getBoards());
   }, []);
@@ -21,7 +24,7 @@ export const MainPage = () => {
       <div className={styles.containerForInputAndButton}>
         <MainFilter inputHandler={(boards: IBoard[]) => setVisibleBoards(boards)} />
         <Button className={styles.createBoardBtn} onClick={() => setShowCreateBoardForm(true)}>
-          Create board
+          {t('createBoard')}
         </Button>
       </div>
       {showCreateBoardForm && (
@@ -39,7 +42,7 @@ export const MainPage = () => {
             ))
           ) : (
             <Typography variant="h2" component="div">
-              No boards=(
+              {t('noBoards')}
             </Typography>
           )}
         </ul>

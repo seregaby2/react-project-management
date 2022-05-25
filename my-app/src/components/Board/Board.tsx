@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './Board.module.scss';
 import { IBoardProps } from './IBoardProps';
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from '../../hooks/redux';
 import { deleteBoard } from '../../api/deleteBoard';
 import { Link } from 'react-router-dom';
@@ -9,10 +10,12 @@ import { Link } from 'react-router-dom';
 export const Board = ({ title, id }: IBoardProps) => {
   const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { t } = useTranslation(['confirmModal']);
   const clickHandler = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowModal(true);
   };
+
   const transformTitle = (title: string): string => {
     const titleArr = title.split(' ');
     return titleArr.reduce((prev, current) => {
@@ -32,7 +35,7 @@ export const Board = ({ title, id }: IBoardProps) => {
       </Link>
       {showModal && (
         <ConfirmModal
-          text={'Are you sure you want to delete the board?'}
+          text={t('deleteBoard')}
           name="main"
           id={id}
           onNo={() => {

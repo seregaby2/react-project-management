@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { SwitchLocalization } from '..';
 
 interface INavList {
@@ -9,6 +10,7 @@ interface INavList {
 export const NavList = ({ handleisOpenMenu }: INavList) => {
   const navigate = useNavigate();
   const isAuth = localStorage.getItem('checkAuthUser');
+  const { t } = useTranslation(['header']);
 
   const handleToCreateNewBoard = () => {
     if (handleisOpenMenu) {
@@ -33,12 +35,12 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
 
   return (
     <ul>
-      {isAuth && <li onClick={handleToCreateNewBoard}>Create new board</li>}
-      {isAuth && <li onClick={handleToProfile}>Edit profile</li>}
+      {isAuth && <li onClick={handleToCreateNewBoard}>{t('createNewBoard')}</li>}
+      {isAuth && <li onClick={handleToProfile}>{t('editProfile')}</li>}
       <li>
         <SwitchLocalization />
       </li>
-      {isAuth && <li onClick={handleSignOut}>Sign out</li>}
+      {isAuth && <li onClick={handleSignOut}>{t('singOut')}</li>}
     </ul>
   );
 };

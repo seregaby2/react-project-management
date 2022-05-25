@@ -1,11 +1,13 @@
 import React from 'react';
 import { Button, ButtonGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './SignInSignUp.module.scss';
 
 export const SignInSignUp = () => {
   const navigate = useNavigate();
   const isAuth = localStorage.getItem('checkAuthUser');
+  const { t } = useTranslation(['homePage']);
 
   return (
     <>
@@ -18,7 +20,7 @@ export const SignInSignUp = () => {
               navigate('/main');
             }}
           >
-            go to main page
+            {t('buttonGoToMainPage')}
           </Button>
         </nav>
       ) : (
@@ -30,7 +32,7 @@ export const SignInSignUp = () => {
               navigate('/login');
             }}
           >
-            sign in
+            {t('signin')}
           </Button>
           <Button
             variant="text"
@@ -38,7 +40,7 @@ export const SignInSignUp = () => {
               navigate('/signup');
             }}
           >
-            sign up
+            {t('signup')}
           </Button>
         </ButtonGroup>
       )}

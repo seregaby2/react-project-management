@@ -2,6 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { Button, LinearProgress, TextField } from '@mui/material';
 import { useForm, Controller, SubmitHandler, useFormState } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   loginValidation,
   nameValidation,
@@ -28,6 +29,7 @@ export function ProfilePage() {
   const { isConfirmalModal } = useAppSelector((state) => state.reducerHelpVars);
   const navigate = useNavigate();
   const { handleSubmit, reset, control } = useForm<ISignInForm>();
+  const { t } = useTranslation(['editProfile', 'confirmModal']);
   const { errors } = useFormState({
     control,
   });
@@ -62,13 +64,13 @@ export function ProfilePage() {
         <> */}
       {isConfirmalModal && (
         <ConfirmModal
-          text={'Are you sure you want to delete the user?'}
+          text={t('deleteUserModal', { ns: 'confirmModal' })}
           onYes={() => deleteUser()}
           onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
         />
       )}
       <Typography variant="h4" component="div">
-        Edit profile
+        {t('editProfile')}
       </Typography>
       <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>
         <Controller
@@ -78,7 +80,7 @@ export function ProfilePage() {
           rules={nameValidation}
           render={({ field }) => (
             <TextField
-              label="name"
+              label={t('name')}
               size="small"
               margin="normal"
               fullWidth
@@ -102,7 +104,7 @@ export function ProfilePage() {
           rules={loginValidation}
           render={({ field }) => (
             <TextField
-              label="login"
+              label={t('login')}
               size="small"
               margin="normal"
               fullWidth
@@ -126,7 +128,7 @@ export function ProfilePage() {
           render={({ field }) => (
             <TextField
               type="password"
-              label="password"
+              label={t('password')}
               size="small"
               margin="normal"
               fullWidth
@@ -154,7 +156,7 @@ export function ProfilePage() {
               marginTop: 2,
             }}
           >
-            Edit
+            {t('edit')}
           </Button>
           <Button
             type="button"
@@ -166,7 +168,7 @@ export function ProfilePage() {
               marginTop: 2,
             }}
           >
-            delete user
+            {t('deleteUser')}
           </Button>
         </div>
       </form>

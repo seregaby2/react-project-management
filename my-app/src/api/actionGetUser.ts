@@ -21,7 +21,6 @@ export const fetchGetUser = (id: string) => async (dispatch: AppDispatch) => {
     dispatch(SingupSlice.actions.getUserFetchingSuccess());
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e, 'mess');
       dispatch(CreateTextBackEndError(e.message));
       dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
     }
