@@ -4,19 +4,18 @@ import {
   addColumnAsync,
   deleteColumnAsync,
   getColumnAsync,
+  IUpdateColumnTitle,
   updateColumAsync,
 } from '../actions/columnsActions';
 
 interface IColumnsSlice {
   columns: IColumnRequest[];
-  //column: IColumnRequest | null;
   isLoading: boolean;
   error: string;
 }
 
 const initialState: IColumnsSlice = {
   columns: [],
-  //column: null,
   isLoading: false,
   error: '',
 };
@@ -24,7 +23,36 @@ const initialState: IColumnsSlice = {
 export const columnsSlice = createSlice({
   name: 'columns',
   initialState,
-  reducers: {},
+  reducers: {
+    updateColumState(state, action: PayloadAction<IUpdateColumnTitle>) {
+      const currentOrder = action.payload.data.order;
+
+      const prevOrder = [...state.columns].find((column) => column.id === action.payload.data.id)
+        ?.order as number;
+      const columns = [...state.columns].filter((column) => column.id !== action.payload.data.id);
+
+      if (currentOrder !== prevOrder) {
+        if (currentOrder < prevOrder) {
+          for (let i = currentOrder - 1; i < prevOrder - 1; i++) {
+            (columns[i].order as number) += 1;
+          }
+          state.columns = [...columns, action.payload.data].sort((a, b) => a.order - b.order);
+        }
+        if (currentOrder > prevOrder) {
+          for (let i = prevOrder - 1; i < currentOrder - 1; i++) {
+            (columns[i].order as number) -= 1;
+          }
+
+          state.columns = [...columns, action.payload.data].sort((a, b) => a.order - b.order);
+        }
+      } else {
+        state.columns = [
+          ...state.columns.filter((column) => column.id !== action.payload.data.id),
+          action.payload.data,
+        ].sort((a, b) => a.order - b.order);
+      }
+    },
+  },
   extraReducers: {
     [getColumnAsync.pending.type]: (state) => {
       state.isLoading = true;
@@ -64,34 +92,8 @@ export const columnsSlice = createSlice({
     [updateColumAsync.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [updateColumAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
+    [updateColumAsync.fulfilled.type]: (state) => {
       state.isLoading = false;
-      const currentOrder = action.payload.order;
-
-      const prevOrder = [...state.columns].find((column) => column.id === action.payload.id)
-        ?.order as number;
-      const columns = [...state.columns].filter((column) => column.id !== action.payload.id);
-
-      if (currentOrder !== prevOrder) {
-        if (currentOrder < prevOrder) {
-          for (let i = currentOrder - 1; i < prevOrder - 1; i++) {
-            (columns[i].order as number) += 1;
-          }
-          state.columns = [...columns, action.payload].sort((a, b) => a.order - b.order);
-        }
-        if (currentOrder > prevOrder) {
-          for (let i = prevOrder - 1; i < currentOrder - 1; i++) {
-            (columns[i].order as number) -= 1;
-          }
-
-          state.columns = [...columns, action.payload].sort((a, b) => a.order - b.order);
-        }
-      } else {
-        state.columns = [
-          ...state.columns.filter((column) => column.id !== action.payload.id),
-          action.payload,
-        ].sort((a, b) => a.order - b.order);
-      }
     },
     [updateColumAsync.rejected.type]: (state) => {
       state.isLoading = false;

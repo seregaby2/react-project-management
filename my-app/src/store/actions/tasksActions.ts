@@ -72,7 +72,7 @@ export interface IUpdateTaskAsync extends IGetAllTasksAsync {
   order?: number;
   description: string;
   userId: string;
-  taskId: string;
+  id: string;
   droppableColumnId?: string;
 }
 
@@ -84,7 +84,7 @@ export const updateTaskAsync = createAsyncThunk(
       order,
       description,
       userId,
-      taskId,
+      id: taskId,
       boardId,
       columnId,
       droppableColumnId,
