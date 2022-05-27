@@ -73,12 +73,22 @@ export interface IUpdateTaskAsync extends IGetAllTasksAsync {
   description: string;
   userId: string;
   taskId: string;
+  droppableColumnId?: string;
 }
 
 export const updateTaskAsync = createAsyncThunk(
   'tasks/updateTask',
   async (
-    { title, order, description, userId, taskId, boardId, columnId }: IUpdateTaskAsync,
+    {
+      title,
+      order,
+      description,
+      userId,
+      taskId,
+      boardId,
+      columnId,
+      droppableColumnId,
+    }: IUpdateTaskAsync,
     thunkApi
   ) => {
     const dataToUpdateTask = {
@@ -87,7 +97,7 @@ export const updateTaskAsync = createAsyncThunk(
       description: description,
       userId: userId,
       boardId: boardId,
-      columnId: columnId,
+      columnId: droppableColumnId ? droppableColumnId : columnId,
     };
 
     try {

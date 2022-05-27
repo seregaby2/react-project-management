@@ -8,6 +8,8 @@ import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
+import { useTranslation } from 'react-i18next';
 
 interface IColumn {
   columnId: string;
@@ -24,6 +26,9 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   const { columns } = useAppSelector((store) => store.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
   const { getActiveColumnId } = tasksSlice.actions;
+  const [isDeleteColumnModal, setIsDeleteColumnModal] = useState(false);
+  const { t } = useTranslation(['confirmModal']);
+  const { t: addTaskTranslate } = useTranslation(['boardPage']);
 
   useEffect(() => {
     const dataToGetTasks = {
@@ -34,6 +39,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   }, []);
 
   const handleDeleteColumn = () => {
+    setIsDeleteColumnModal(false);
     const deleteDataColumn = {
       boardId: boardId,
       columnId: columnId,
@@ -90,13 +96,20 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                       dispatch(getActiveColumnId(columnId));
                     }}
                   >
-                    add task
+                    {addTaskTranslate('addTask')}
                   </button>
                   <HighlightOffIcon
                     id={columnId}
-                    onClick={handleDeleteColumn}
+                    onClick={() => setIsDeleteColumnModal(true)}
                     className={styles.deleteBtn}
                   />
+                  {isDeleteColumnModal && (
+                    <ConfirmModal
+                      text={t('deleteColumn')}
+                      onNo={() => setIsDeleteColumnModal(false)}
+                      onYes={handleDeleteColumn}
+                    />
+                  )}
                 </div>
                 {isEditTitle && (
                   <EditColumnTitle
@@ -108,12 +121,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                   />
                 )}
                 {!isEditTitle && (
-                  <h4
-                    className={styles.title}
-                    onClick={() => {
-                      setIsEditTitle(true);
-                    }}
-                  >
+                  <h4 className={styles.title} onClick={() => setIsEditTitle(true)}>
                     {title}
                   </h4>
                 )}
@@ -124,11 +132,11 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                     .map((task, index) => {
                       return (
                         <Task
+                          key={`${task.id}-${index}`}
                           index={index}
                           boardId={task.boardId}
                           columnId={task.columnId}
                           taskId={task.id}
-                          key={task.id}
                           title={task.title}
                           description={task.description}
                           userId={task.userId}

@@ -5,12 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
 import styles from './BoardPage.module.scss';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import {
-  createTaskAsync,
-  deleteTaskAsync,
-  updateTaskAsync,
-} from '../../store/actions/tasksActions';
-import { tasksSlice } from '../../store/reducers/tasksSlice';
+import { updateTaskAsync } from '../../store/actions/tasksActions';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
@@ -18,16 +13,15 @@ export const BoardPage = () => {
   const dispatch = useAppDispatch();
   const { columns, isLoading, error } = useAppSelector((state) => state.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
-  const { deleteTaskFromState } = tasksSlice.actions;
 
   // TODO remove!!!!!
-  const temporaryBoardID = '3bb70797-691d-436e-a420-94032e91fa10';
+  const temporaryBoardID = 'e1878d40-0f75-46b9-a043-dd89110101cb';
 
   useEffect(() => {
     dispatch(getColumnAsync(temporaryBoardID));
   }, []);
 
-  const onDragEnd = async (result: DropResult) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
     if (!destination) return;
 
@@ -36,7 +30,7 @@ export const BoardPage = () => {
     }
 
     if (type === 'column') {
-      await dispatch(
+      dispatch(
         updateColumAsync({
           boardId: temporaryBoardID,
           data: {
@@ -52,9 +46,10 @@ export const BoardPage = () => {
       const home = [...tasks]
         .filter((task) => task.columnId === source.droppableId)
         .sort((a, b) => (a.order as number) - (b.order as number));
-      //const foreign = [...tasks]
-      //  .filter((task) => task.columnId === destination.droppableId)
-      //  .sort((a, b) => (a.order as number) - (b.order as number));
+      const foreign = [...tasks]
+        .filter((task) => task.columnId === destination.droppableId)
+        .sort((a, b) => (a.order as number) - (b.order as number));
+
       if (source.droppableId === destination.droppableId) {
         const dataToUpdateTask = {
           title: home[source.index].title,
@@ -65,25 +60,20 @@ export const BoardPage = () => {
           columnId: home[source.index].columnId,
           taskId: home[source.index].id,
         };
-        await dispatch(updateTaskAsync(dataToUpdateTask));
+        dispatch(updateTaskAsync(dataToUpdateTask));
       } else {
-        const dataToDeleteTask = {
+        const dataToUpdateTask = {
+          title: home[source.index].title,
+          order: destination.index === 0 ? 1 : (foreign[destination.index - 1].order as number) + 1,
+          description: home[source.index].description,
+          userId: home[source.index].userId,
           boardId: home[source.index].boardId,
           columnId: home[source.index].columnId,
+          droppableColumnId: destination.droppableId,
           taskId: home[source.index].id,
         };
-        const dataToCreateTask = {
-          boardId: home[source.index].boardId,
-          columnId: destination.droppableId,
-          data: {
-            title: home[source.index].title,
-            description: home[source.index].description,
-            userId: home[source.index].userId,
-          },
-        };
-        await dispatch(createTaskAsync(dataToCreateTask));
-        await dispatch(deleteTaskFromState(home[source.index].id));
-        await dispatch(deleteTaskAsync(dataToDeleteTask));
+
+        dispatch(updateTaskAsync(dataToUpdateTask));
       }
     }
   };
@@ -94,13 +84,15 @@ export const BoardPage = () => {
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
       ) : (
         <DragDropContext onDragEnd={onDragEnd}>
-          <h2>Board title</h2>
-          <p className={styles.description}>
-            Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-            inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
-            repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
-            excepturi?
-          </p>
+          <div className={styles.infoAboutBoard}>
+            <h2>Board title</h2>
+            <p className={styles.description}>
+              Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+              inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
+              repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
+              excepturi?
+            </p>
+          </div>
           <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
           {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
           {createColumn && (
