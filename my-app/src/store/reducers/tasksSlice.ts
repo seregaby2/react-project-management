@@ -84,7 +84,6 @@ export const tasksSlice = createSlice({
       action: PayloadAction<{ task: ITaskResponse; columnId: string }>
     ) => {
       state.isLoading = false;
-      console.log(action.payload.columnId);
 
       const prevColumnId = action.payload.columnId;
       const currentColumnId = action.payload.task.columnId;

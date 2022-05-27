@@ -66,24 +66,32 @@ export const columnsSlice = createSlice({
     },
     [updateColumAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
       state.isLoading = false;
-      //const column = state.columns.find((column) => column.id === action.payload.id);
-      //if (column?.order === action.payload.order) {
-      //  const filteredColumns = state.columns.filter((column) => column.id !== action.payload.id);
-      //  console.log(1);
+      const currentOrder = action.payload.order;
 
-      //  state.columns = [...filteredColumns, action.payload].sort((a, b) => a.order - b.order);
-      //} else {
-      //  console.log(2);
-      //  const filteredColumns = state.columns.filter((column) => column.id !== action.payload.id);
-      //  filteredColumns.map((column) => {
-      //    if (column.order > action.payload.order) {
-      //      return (column.order += 1);
-      //    } else {
-      //      return;
-      //    }
-      //  });
-      //  state.columns = [...filteredColumns, action.payload].sort((a, b) => a.order - b.order);
-      //}
+      const prevOrder = [...state.columns].find((column) => column.id === action.payload.id)
+        ?.order as number;
+      const columns = [...state.columns].filter((column) => column.id !== action.payload.id);
+
+      if (currentOrder !== prevOrder) {
+        if (currentOrder < prevOrder) {
+          for (let i = currentOrder - 1; i < prevOrder - 1; i++) {
+            (columns[i].order as number) += 1;
+          }
+          state.columns = [...columns, action.payload].sort((a, b) => a.order - b.order);
+        }
+        if (currentOrder > prevOrder) {
+          for (let i = prevOrder - 1; i < currentOrder - 1; i++) {
+            (columns[i].order as number) -= 1;
+          }
+
+          state.columns = [...columns, action.payload].sort((a, b) => a.order - b.order);
+        }
+      } else {
+        state.columns = [
+          ...state.columns.filter((column) => column.id !== action.payload.id),
+          action.payload,
+        ].sort((a, b) => a.order - b.order);
+      }
     },
     [updateColumAsync.rejected.type]: (state) => {
       state.isLoading = false;

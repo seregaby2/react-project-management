@@ -24,7 +24,6 @@ interface IAddColumn {
   boardId: string;
   data: {
     title: string;
-    //order: number
   };
 }
 
@@ -73,7 +72,7 @@ export interface IUpdateColumnTitle {
 }
 
 export const updateColumAsync = createAsyncThunk(
-  'columns/updateTitle',
+  'columns/updateColumn',
   async ({ boardId, data }: IUpdateColumnTitle, thunkApi) => {
     const dataToRequest = {
       title: data.title,
@@ -81,14 +80,16 @@ export const updateColumAsync = createAsyncThunk(
     };
 
     try {
-      //const response =
-      await axios.put(`${BASE_URL}/boards/${boardId}/columns/${data.id}`, dataToRequest, {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      });
-      thunkApi.dispatch(getColumnAsync(boardId));
-      //return response.data;
+      const response = await axios.put(
+        `${BASE_URL}/boards/${boardId}/columns/${data.id}`,
+        dataToRequest,
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        }
+      );
+      return response.data;
     } catch (error) {
       thunkApi.rejectWithValue('Unable to update column.');
     }

@@ -85,53 +85,53 @@ export const BoardPage = () => {
 
   return (
     <main className={styles.boardPage}>
-      {isLoading ? (
+      {/*{isLoading ? (
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
-      ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className={styles.infoAboutBoard}>
-            <h2>Board title</h2>
-            <p className={styles.description}>
-              Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-              inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
-              repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
-              excepturi?
-            </p>
-          </div>
-          <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
-          {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
-          {createColumn && (
-            <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
-          )}
-          {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
-          {columns.length > 0 && (
-            <Droppable droppableId="columns" direction="horizontal" type="column">
-              {(provided) => (
-                <div
-                  className={styles.columnsContainer}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {columns.length > 0 &&
-                    columns.map((column, index) => {
-                      return (
-                        <Column
-                          index={index}
-                          key={column.id}
-                          columnId={column.id}
-                          boardId={temporaryBoardID}
-                          title={column.title}
-                          setCreateTask={setCreateTask}
-                        />
-                      );
-                    })}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          )}
-        </DragDropContext>
-      )}
+      ) : (*/}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className={styles.infoAboutBoard}>
+          <h2>Board title</h2>
+          <p className={styles.description}>
+            Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+            inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
+            repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
+            excepturi?
+          </p>
+        </div>
+        <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
+        {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
+        {createColumn && (
+          <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
+        )}
+        {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
+        {columns.length > 0 && (
+          <Droppable droppableId="columns" direction="horizontal" type="column">
+            {(provided) => (
+              <div
+                className={styles.columnsContainer}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {columns.length > 0 &&
+                  columns.map((column, index) => {
+                    return (
+                      <Column
+                        index={index}
+                        key={column.id}
+                        columnId={column.id}
+                        boardId={temporaryBoardID}
+                        title={column.title}
+                        setCreateTask={setCreateTask}
+                      />
+                    );
+                  })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
+      </DragDropContext>
+      {/*)}*/}
     </main>
   );
 };
