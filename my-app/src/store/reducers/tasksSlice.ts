@@ -31,60 +31,7 @@ export const tasksSlice = createSlice({
     deleteTaskFromState(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
-  },
-  extraReducers: {
-    [getAllTasksAsync.pending.type]: (state) => {
-      state.isLoading = true;
-      state.error = '';
-    },
-    [getAllTasksAsync.fulfilled.type]: (
-      state,
-      action: PayloadAction<{ data: ITaskResponse[]; columnId: string }>
-    ) => {
-      state.isLoading = false;
-      const filteredTasks = state.tasks.filter((task) => task.columnId !== action.payload.columnId);
-      state.tasks = [...filteredTasks, ...action.payload.data];
-      state.error = '';
-    },
-    [getAllTasksAsync.rejected.type]: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    [createTaskAsync.pending.type]: (state) => {
-      state.isLoading = true;
-      state.error = '';
-    },
-    [createTaskAsync.fulfilled.type]: (state, action: PayloadAction<ITaskResponse>) => {
-      state.isLoading = false;
-      state.tasks = [action.payload, ...state.tasks];
-      state.error = '';
-    },
-    [createTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    [deleteTaskAsync.pending.type]: (state) => {
-      state.isLoading = true;
-      state.error = '';
-    },
-    [deleteTaskAsync.fulfilled.type]: (state) => {
-      state.isLoading = false;
-      state.error = '';
-    },
-    [deleteTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    [updateTaskAsync.pending.type]: (state) => {
-      state.isLoading = true;
-      state.error = '';
-    },
-    [updateTaskAsync.fulfilled.type]: (
-      state,
-      action: PayloadAction<{ task: ITaskResponse; columnId: string }>
-    ) => {
-      state.isLoading = false;
-
+    updateTaskDataState(state, action: PayloadAction<{ task: ITaskResponse; columnId: string }>) {
       const prevColumnId = action.payload.columnId;
       const currentColumnId = action.payload.task.columnId;
 
@@ -176,7 +123,57 @@ export const tasksSlice = createSlice({
           ];
         }
       }
-
+    },
+  },
+  extraReducers: {
+    [getAllTasksAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [getAllTasksAsync.fulfilled.type]: (
+      state,
+      action: PayloadAction<{ data: ITaskResponse[]; columnId: string }>
+    ) => {
+      state.isLoading = false;
+      const filteredTasks = state.tasks.filter((task) => task.columnId !== action.payload.columnId);
+      state.tasks = [...filteredTasks, ...action.payload.data];
+      state.error = '';
+    },
+    [getAllTasksAsync.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [createTaskAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [createTaskAsync.fulfilled.type]: (state, action: PayloadAction<ITaskResponse>) => {
+      state.isLoading = false;
+      state.tasks = [action.payload, ...state.tasks];
+      state.error = '';
+    },
+    [createTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [deleteTaskAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [deleteTaskAsync.fulfilled.type]: (state) => {
+      state.isLoading = false;
+      state.error = '';
+    },
+    [deleteTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [updateTaskAsync.pending.type]: (state) => {
+      state.isLoading = true;
+      state.error = '';
+    },
+    [updateTaskAsync.fulfilled.type]: (state) => {
+      state.isLoading = false;
       state.error = '';
     },
     [updateTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {

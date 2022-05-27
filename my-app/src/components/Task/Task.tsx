@@ -41,6 +41,7 @@ export const Task = ({
   const { deleteTaskFromState } = tasksSlice.actions;
   const [isDeleteTaskModal, setIsDeleteTaskModal] = useState(false);
   const { t } = useTranslation(['confirmModal']);
+  const { updateTaskDataState } = tasksSlice.actions;
 
   const handlerEditTask = () => {
     setIsEditTask(true);
@@ -58,9 +59,10 @@ export const Task = ({
       userId: userId,
       boardId: boardId,
       columnId: columnId,
-      taskId: taskId,
+      id: taskId,
     };
     setIsEditTask(false);
+    dispatch(updateTaskDataState({ task: dataToUpdateTask, columnId: columnId }));
     dispatch(updateTaskAsync(dataToUpdateTask));
   };
 

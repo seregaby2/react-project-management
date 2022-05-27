@@ -36,16 +36,16 @@ export const BoardPage = () => {
     }
 
     if (type === 'column') {
-      dispatch(
-        updateColumAsync({
-          boardId: temporaryBoardID,
-          data: {
-            id: columns[source.index].id,
-            title: columns[source.index].title,
-            order: columns[destination.index].order,
-          },
-        })
-      );
+      const dataToUpdateColumn = {
+        boardId: temporaryBoardID,
+        data: {
+          id: columns[source.index].id,
+          title: columns[source.index].title,
+          order: columns[destination.index].order,
+        },
+      };
+      dispatch(updateColumState(dataToUpdateColumn));
+      dispatch(updateColumAsync(dataToUpdateColumn));
     }
 
     if (type === 'task') {
@@ -63,8 +63,11 @@ export const BoardPage = () => {
           userId: home[source.index].userId,
           boardId: home[source.index].boardId,
           columnId: home[source.index].columnId,
-          taskId: home[source.index].id,
+          id: home[source.index].id,
         };
+        dispatch(
+          updateTaskDataState({ task: dataToUpdateTask, columnId: home[source.index].columnId })
+        );
         dispatch(updateTaskAsync(dataToUpdateTask));
       } else {
         const dataToUpdateTask = {
@@ -75,63 +78,67 @@ export const BoardPage = () => {
           boardId: home[source.index].boardId,
           columnId: home[source.index].columnId,
           droppableColumnId: destination.droppableId,
-          taskId: home[source.index].id,
+          id: home[source.index].id,
         };
-
         dispatch(updateTaskAsync(dataToUpdateTask));
+
+        dataToUpdateTask.columnId = destination.droppableId;
+        dispatch(
+          updateTaskDataState({ task: dataToUpdateTask, columnId: home[source.index].columnId })
+        );
       }
     }
   };
 
   return (
     <main className={styles.boardPage}>
-      {/*{isLoading ? (
+      {isLoading ? (
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
-      ) : (*/}
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className={styles.infoAboutBoard}>
-          <h2>Board title</h2>
-          <p className={styles.description}>
-            Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-            inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
-            repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
-            excepturi?
-          </p>
-        </div>
-        <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
-        {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
-        {createColumn && (
-          <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
-        )}
-        {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
-        {columns.length > 0 && (
-          <Droppable droppableId="columns" direction="horizontal" type="column">
-            {(provided) => (
-              <div
-                className={styles.columnsContainer}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {columns.length > 0 &&
-                  columns.map((column, index) => {
-                    return (
-                      <Column
-                        index={index}
-                        key={column.id}
-                        columnId={column.id}
-                        boardId={temporaryBoardID}
-                        title={column.title}
-                        setCreateTask={setCreateTask}
-                      />
-                    );
-                  })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        )}
-      </DragDropContext>
-      {/*)}*/}
+      ) : (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className={styles.infoAboutBoard}>
+            <h2>Board title</h2>
+            <p className={styles.description}>
+              Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+              inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
+              repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
+              excepturi?
+            </p>
+          </div>
+          <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
+          {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
+          {createColumn && (
+            <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
+          )}
+          {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
+          {columns.length > 0 && (
+            <Droppable droppableId="columns" direction="horizontal" type="column">
+              {(provided) => (
+                <div
+                  className={styles.columnsContainer}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {columns.length > 0 &&
+                    columns.map((column, index) => {
+                      return (
+                        <Column
+                          index={index}
+                          key={column.id}
+                          columnId={column.id}
+                          boardId={temporaryBoardID}
+                          title={column.title}
+                          setCreateTask={setCreateTask}
+                        />
+                      );
+                    })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          )}
+        </DragDropContext>
+      )}
     </main>
   );
 };

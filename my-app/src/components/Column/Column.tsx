@@ -10,6 +10,7 @@ import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 import { useTranslation } from 'react-i18next';
+import { columnsSlice } from '../../store/reducers/columnsSlice';
 
 interface IColumn {
   columnId: string;
@@ -29,6 +30,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   const [isDeleteColumnModal, setIsDeleteColumnModal] = useState(false);
   const { t } = useTranslation(['confirmModal']);
   const { t: addTaskTranslate } = useTranslation(['boardPage']);
+  const { updateColumState } = columnsSlice.actions;
 
   useEffect(() => {
     const dataToGetTasks = {
@@ -57,7 +59,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
       boardId: boardId,
       data: columnData as IColumnRequest,
     };
-
+    dispatch(updateColumState(dataToUpdateColumn));
     dispatch(updateColumAsync(dataToUpdateColumn));
     setIsEditTitle(false);
   };
