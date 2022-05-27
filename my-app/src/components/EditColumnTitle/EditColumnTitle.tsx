@@ -3,6 +3,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import clsx from 'clsx';
 import styles from './EditColumnTitle.module.scss';
+import useOnclickOutside from 'react-cool-onclickoutside';
 
 interface IEditColumnTitle {
   titleText: string;
@@ -19,8 +20,9 @@ export const EditColumnTitle = ({
   handleSetTitleText,
   id,
 }: IEditColumnTitle) => {
+  const clickOutside = useOnclickOutside(() => handleCancelChangingTitle());
   return (
-    <div className={styles.editTitleContainer}>
+    <div ref={clickOutside} className={styles.editTitleContainer}>
       <DoneIcon
         id={id}
         className={clsx(styles.buttons, styles.doneBtn)}

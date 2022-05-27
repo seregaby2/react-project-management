@@ -1,12 +1,16 @@
 @import '../../styles/variables.scss';
 
 .boardPage {
-  @include flex-column-center;
+  position: relative;
   @include text14;
   max-width: 1920px;
   width: 100%;
   overflow: hidden;
   position: relative;
+
+  .infoAboutBoard {
+    @include flex-column-center;
+  }
 
   h2 {
     margin-top: 20px;
