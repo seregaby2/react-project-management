@@ -29,6 +29,9 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
+    clearTaskError(state) {
+      state.error = '';
+    },
     setIsDeleteTask(
       state,
       action: PayloadAction<{

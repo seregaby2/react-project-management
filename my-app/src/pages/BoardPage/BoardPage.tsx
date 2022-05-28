@@ -9,6 +9,7 @@ import {
   ButtonToMain,
   Column,
   ColumnModal,
+  ConfirmError,
   ConfirmModal,
   TaskModal,
 } from '../../components';
@@ -20,20 +21,31 @@ import {
 import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
   const dispatch = useAppDispatch();
-  const { columns, isLoading, error, isDeleteColumn, activeColumnId } = useAppSelector(
-    (state) => state.reducerColumns
-  );
-  const { tasks, activeTaskColumnId, activeTaskId, isDeleteTask } = useAppSelector(
-    (state) => state.reducerTasks
-  );
-  const { updateTaskDataState, deleteTaskFromState, setIsDeleteTask } = tasksSlice.actions;
-  const { updateColumState, setIsDeleteColumn } = columnsSlice.actions;
+  const {
+    columns,
+    isLoading,
+    error: columnError,
+    isDeleteColumn,
+    activeColumnId,
+  } = useAppSelector((state) => state.reducerColumns);
+  const {
+    tasks,
+    activeTaskColumnId,
+    activeTaskId,
+    isDeleteTask,
+    error: taskError,
+  } = useAppSelector((state) => state.reducerTasks);
+  const { updateTaskDataState, deleteTaskFromState, setIsDeleteTask, clearTaskError } =
+    tasksSlice.actions;
+  const { updateColumState, setIsDeleteColumn, clearColumnError } = columnsSlice.actions;
   const { t } = useTranslation(['confirmModal']);
+  const navigate = useNavigate();
 
   // TODO remove!!!!!
   const temporaryBoardID = 'fffa11f4-c201-46be-979e-5eef487c3547';
@@ -131,70 +143,79 @@ export const BoardPage = () => {
       {isLoading ? (
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
       ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          {isDeleteColumn && (
-            <ConfirmModal
-              text={t('deleteColumn')}
-              onNo={() =>
-                dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }))
-              }
-              onYes={handleDeleteColumn}
+        <>
+          {columnError || taskError ? (
+            <ConfirmError
+              text={columnError || taskError}
+              ClickOk={() => {
+                columnError
+                  ? dispatch(clearColumnError()) && navigate('/main')
+                  : dispatch(clearTaskError()) && navigate('/main');
+              }}
             />
-          )}
-          {isDeleteTask && (
-            <ConfirmModal
-              text={t('deleteTask')}
-              onNo={() =>
-                dispatch(
-                  setIsDeleteTask({ isDeleteTask: false, activeTaskColumnId: '', activeTaskId: '' })
-                )
-              }
-              onYes={handleDeleteTask}
-            />
-          )}
-          <ButtonToMain />
-          <div className={styles.infoAboutBoard}>
-            <h2>Board title</h2>
-            <p className={styles.description}>
-              Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-              inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
-              repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque molestias
-              excepturi?
-            </p>
-          </div>
-          <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
-          {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
-          {createColumn && (
-            <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
-          )}
-          {error && <h3 className={styles.errorMessage}>{error}. Tap to add column.</h3>}
-          {columns.length > 0 && (
-            <Droppable droppableId="columns" direction="horizontal" type="column">
-              {(provided) => (
-                <div
-                  className={styles.columnsContainer}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {columns.length > 0 &&
-                    columns.map((column, index) => {
-                      return (
-                        <Column
-                          index={index}
-                          key={column.id}
-                          columnId={column.id}
-                          boardId={temporaryBoardID}
-                          title={column.title}
-                          setCreateTask={setCreateTask}
-                        />
-                      );
-                    })}
-                  {provided.placeholder}
-                </div>
+          ) : (
+            <DragDropContext onDragEnd={onDragEnd}>
+              {(isDeleteColumn || isDeleteTask) && (
+                <ConfirmModal
+                  text={isDeleteColumn ? t('deleteColumn') : t('deleteTask')}
+                  onNo={() =>
+                    isDeleteColumn
+                      ? dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }))
+                      : dispatch(
+                          setIsDeleteTask({
+                            isDeleteTask: false,
+                            activeTaskColumnId: '',
+                            activeTaskId: '',
+                          })
+                        )
+                  }
+                  onYes={isDeleteColumn ? handleDeleteColumn : handleDeleteTask}
+                />
               )}
-            </Droppable>
+              <ButtonToMain />
+              <div className={styles.infoAboutBoard}>
+                <h2>Board title</h2>
+                <p className={styles.description}>
+                  Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+                  inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
+                  repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque
+                  molestias excepturi?
+                </p>
+              </div>
+              <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
+              {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
+              {createColumn && (
+                <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
+              )}
+              {columns.length > 0 && (
+                <Droppable droppableId="columns" direction="horizontal" type="column">
+                  {(provided) => (
+                    <div
+                      className={styles.columnsContainer}
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      {columns.length > 0 &&
+                        columns.map((column, index) => {
+                          return (
+                            <Column
+                              index={index}
+                              key={column.id}
+                              columnId={column.id}
+                              boardId={temporaryBoardID}
+                              title={column.title}
+                              setCreateTask={setCreateTask}
+                            />
+                          );
+                        })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              )}
+            </DragDropContext>
           )}
-        </DragDropContext>
+        </>
       )}
     </main>
   );

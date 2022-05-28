@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { BASE_URL, TOKEN } from '../../constants/api';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 
@@ -15,7 +15,8 @@ export const getColumnAsync = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      return thunkApi.rejectWithValue('No columns found');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -39,7 +40,8 @@ export const addColumnAsync = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      thunkApi.rejectWithValue('Unable to create column.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -61,7 +63,8 @@ export const deleteColumnAsync = createAsyncThunk(
 
       return columnId;
     } catch (error) {
-      thunkApi.rejectWithValue('Unable to delete column.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -91,7 +94,8 @@ export const updateColumAsync = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      thunkApi.rejectWithValue('Unable to update column.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
