@@ -21,7 +21,7 @@ import {
 import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
@@ -46,17 +46,19 @@ export const BoardPage = () => {
   const { updateColumState, setIsDeleteColumn, clearColumnError } = columnsSlice.actions;
   const { t } = useTranslation(['confirmModal']);
   const navigate = useNavigate();
-
-  // TODO remove!!!!!
-  const temporaryBoardID = 'fffa11f4-c201-46be-979e-5eef487c3547';
+  const { boardId } = useParams();
+  const { boards } = useAppSelector((state) => state.reducerBoards);
+  const board = boards.find((board) => board.id === boardId);
 
   useEffect(() => {
-    dispatch(getColumnAsync(temporaryBoardID));
-  }, []);
+    if (boardId) {
+      dispatch(getColumnAsync(boardId));
+    }
+  }, [boardId, dispatch]);
 
   const handleDeleteColumn = () => {
     const deleteDataColumn = {
-      boardId: temporaryBoardID,
+      boardId: boardId as string,
       columnId: activeColumnId,
     };
     dispatch(deleteColumnAsync(deleteDataColumn));
@@ -65,7 +67,7 @@ export const BoardPage = () => {
 
   const handleDeleteTask = () => {
     const dataToDelete = {
-      boardId: temporaryBoardID,
+      boardId: boardId as string,
       columnId: activeTaskColumnId,
       taskId: activeTaskId,
     };
@@ -84,7 +86,7 @@ export const BoardPage = () => {
 
     if (type === 'column') {
       const dataToUpdateColumn = {
-        boardId: temporaryBoardID,
+        boardId: boardId as string,
         data: {
           id: columns[source.index].id,
           title: columns[source.index].title,
@@ -174,18 +176,15 @@ export const BoardPage = () => {
               )}
               <ButtonToMain />
               <div className={styles.infoAboutBoard}>
-                <h2>Board title</h2>
-                <p className={styles.description}>
-                  Board description Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
-                  inventore totam fugiat consectetur? Fugiat, quis! Dolore esse ullam aspernatur
-                  repudiandae, nesciunt dicta reprehenderit unde maxime facilis veniam itaque
-                  molestias excepturi?
-                </p>
+                <h2>{board?.title}</h2>
+                <p className={styles.description}>{board?.description}</p>
               </div>
               <BoardControls setCreateColumn={setCreateColumn} columns={columns} />
-              {createTask && <TaskModal setCreateTask={setCreateTask} boardId={temporaryBoardID} />}
+              {createTask && (
+                <TaskModal setCreateTask={setCreateTask} boardId={boardId as string} />
+              )}
               {createColumn && (
-                <ColumnModal setCreateColumn={setCreateColumn} boardId={temporaryBoardID} />
+                <ColumnModal setCreateColumn={setCreateColumn} boardId={boardId as string} />
               )}
               {columns.length > 0 && (
                 <Droppable droppableId="columns" direction="horizontal" type="column">
@@ -202,7 +201,7 @@ export const BoardPage = () => {
                               index={index}
                               key={column.id}
                               columnId={column.id}
-                              boardId={temporaryBoardID}
+                              boardId={boardId as string}
                               title={column.title}
                               setCreateTask={setCreateTask}
                             />

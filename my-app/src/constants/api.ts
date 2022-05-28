@@ -1,4 +1,4 @@
 import { getTokenFromLS } from '../utils';
 
-export const BASE_URL = 'https://vast-harbor-78608.herokuapp.com';
+export const BASE_URL = 'https://evening-scrubland-70500.herokuapp.com';
 export const TOKEN = getTokenFromLS();

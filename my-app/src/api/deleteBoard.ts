@@ -4,15 +4,13 @@ import { boardsActions } from '../store/reducers/boardsSlice';
 import { IBoard } from '../interfaces/IBoard';
 import { CreateTextBackEndError } from '../utils/treatmentErrors';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-
-const baseUrl = 'https://vast-harbor-78608.herokuapp.com/boards';
+import { BASE_URL, TOKEN } from '../constants/api';
 
 export const deleteBoard = (id: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(boardsActions.boardsFetchStart());
-    const token = localStorage.getItem('token') || '';
-    await axios.delete<IBoard>(baseUrl + `/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    await axios.delete<IBoard>(`${BASE_URL}/boards/${id}`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
     });
     dispatch(boardsActions.boardDeleteSuccess(id));
   } catch (e) {
