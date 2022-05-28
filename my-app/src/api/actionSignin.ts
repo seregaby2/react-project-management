@@ -6,14 +6,13 @@ import { fetchGetUser } from '../api/actionGetUser';
 import jwtDecode from 'jwt-decode';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 import { CreateTextBackEndError } from '../utils/treatmentErrors';
-
-const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
+import { BASE_URL } from '../constants/api';
 
 export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDispatch) => {
   try {
     dispatch(SingupSlice.actions.authFetching());
 
-    const response = await axios.post<Itoken>(`${baseUrl}/signin`, {
+    const response = await axios.post<Itoken>(`${BASE_URL}/signin`, {
       login: dataAuth.login,
       password: dataAuth.password,
     });

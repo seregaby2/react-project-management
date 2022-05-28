@@ -1,11 +1,23 @@
-import { LinearProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BoardControls, Column, ColumnModal, TaskModal } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
-import styles from './BoardPage.module.scss';
+import { LinearProgress } from '@mui/material';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { updateTaskAsync } from '../../store/actions/tasksActions';
+import { useTranslation } from 'react-i18next';
+import styles from './BoardPage.module.scss';
+import {
+  BoardControls,
+  ButtonToMain,
+  Column,
+  ColumnModal,
+  ConfirmModal,
+  TaskModal,
+} from '../../components';
+import {
+  deleteColumnAsync,
+  getColumnAsync,
+  updateColumAsync,
+} from '../../store/actions/columnsActions';
+import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
 
@@ -13,17 +25,42 @@ export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
   const dispatch = useAppDispatch();
-  const { columns, isLoading, error } = useAppSelector((state) => state.reducerColumns);
-  const { tasks } = useAppSelector((state) => state.reducerTasks);
-  const { updateTaskDataState } = tasksSlice.actions;
-  const { updateColumState } = columnsSlice.actions;
+  const { columns, isLoading, error, isDeleteColumn, activeColumnId } = useAppSelector(
+    (state) => state.reducerColumns
+  );
+  const { tasks, activeTaskColumnId, activeTaskId, isDeleteTask } = useAppSelector(
+    (state) => state.reducerTasks
+  );
+  const { updateTaskDataState, deleteTaskFromState, setIsDeleteTask } = tasksSlice.actions;
+  const { updateColumState, setIsDeleteColumn } = columnsSlice.actions;
+  const { t } = useTranslation(['confirmModal']);
 
   // TODO remove!!!!!
-  const temporaryBoardID = 'e1878d40-0f75-46b9-a043-dd89110101cb';
+  const temporaryBoardID = 'fffa11f4-c201-46be-979e-5eef487c3547';
 
   useEffect(() => {
     dispatch(getColumnAsync(temporaryBoardID));
   }, []);
+
+  const handleDeleteColumn = () => {
+    const deleteDataColumn = {
+      boardId: temporaryBoardID,
+      columnId: activeColumnId,
+    };
+    dispatch(deleteColumnAsync(deleteDataColumn));
+    dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }));
+  };
+
+  const handleDeleteTask = () => {
+    const dataToDelete = {
+      boardId: temporaryBoardID,
+      columnId: activeTaskColumnId,
+      taskId: activeTaskId,
+    };
+    dispatch(deleteTaskAsync(dataToDelete));
+    dispatch(deleteTaskFromState(activeTaskId));
+    dispatch(setIsDeleteTask({ isDeleteTask: false, activeTaskColumnId: '', activeTaskId: '' }));
+  };
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
@@ -95,6 +132,27 @@ export const BoardPage = () => {
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
       ) : (
         <DragDropContext onDragEnd={onDragEnd}>
+          {isDeleteColumn && (
+            <ConfirmModal
+              text={t('deleteColumn')}
+              onNo={() =>
+                dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }))
+              }
+              onYes={handleDeleteColumn}
+            />
+          )}
+          {isDeleteTask && (
+            <ConfirmModal
+              text={t('deleteTask')}
+              onNo={() =>
+                dispatch(
+                  setIsDeleteTask({ isDeleteTask: false, activeTaskColumnId: '', activeTaskId: '' })
+                )
+              }
+              onYes={handleDeleteTask}
+            />
+          )}
+          <ButtonToMain />
           <div className={styles.infoAboutBoard}>
             <h2>Board title</h2>
             <p className={styles.description}>

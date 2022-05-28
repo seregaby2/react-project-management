@@ -3,12 +3,11 @@ import { EditColumnTitle, Task } from '..';
 import styles from './Column.module.scss';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { deleteColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
+import { updateColumAsync } from '../../store/actions/columnsActions';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 import { useTranslation } from 'react-i18next';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
 
@@ -26,11 +25,9 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   const dispatch = useAppDispatch();
   const { columns } = useAppSelector((store) => store.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
-  const { getActiveColumnId } = tasksSlice.actions;
-  const [isDeleteColumnModal, setIsDeleteColumnModal] = useState(false);
-  const { t } = useTranslation(['confirmModal']);
+  const { setActiveColumnId } = tasksSlice.actions;
   const { t: addTaskTranslate } = useTranslation(['boardPage']);
-  const { updateColumState } = columnsSlice.actions;
+  const { updateColumState, setIsDeleteColumn } = columnsSlice.actions;
 
   useEffect(() => {
     const dataToGetTasks = {
@@ -39,15 +36,6 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
     };
     dispatch(getAllTasksAsync(dataToGetTasks));
   }, []);
-
-  const handleDeleteColumn = () => {
-    setIsDeleteColumnModal(false);
-    const deleteDataColumn = {
-      boardId: boardId,
-      columnId: columnId,
-    };
-    dispatch(deleteColumnAsync(deleteDataColumn));
-  };
 
   const handleAcceptChangingTitle = () => {
     const columnData = { ...columns.find((column) => column.id === columnId) };
@@ -95,23 +83,20 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
                     className={styles.addTask}
                     onClick={() => {
                       setCreateTask(true);
-                      dispatch(getActiveColumnId(columnId));
+                      dispatch(setActiveColumnId(columnId));
                     }}
                   >
                     {addTaskTranslate('addTask')}
                   </button>
                   <HighlightOffIcon
                     id={columnId}
-                    onClick={() => setIsDeleteColumnModal(true)}
+                    onClick={() =>
+                      dispatch(
+                        setIsDeleteColumn({ isDeleteColumn: true, activeColumnId: columnId })
+                      )
+                    }
                     className={styles.deleteBtn}
                   />
-                  {isDeleteColumnModal && (
-                    <ConfirmModal
-                      text={t('deleteColumn')}
-                      onNo={() => setIsDeleteColumnModal(false)}
-                      onYes={handleDeleteColumn}
-                    />
-                  )}
                 </div>
                 {isEditTitle && (
                   <EditColumnTitle

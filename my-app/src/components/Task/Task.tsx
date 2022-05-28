@@ -6,11 +6,9 @@ import DoneIcon from '@mui/icons-material/Done';
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../hooks/redux';
-import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
+import { updateTaskAsync } from '../../store/actions/tasksActions';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import { Draggable } from 'react-beautiful-dnd';
-import { useTranslation } from 'react-i18next';
-import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 
 interface ITask {
@@ -38,10 +36,7 @@ export const Task = ({
   const [isEditTask, setIsEditTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
   const [taskDescription, setTaskDescription] = useState(description);
-  const { deleteTaskFromState } = tasksSlice.actions;
-  const [isDeleteTaskModal, setIsDeleteTaskModal] = useState(false);
-  const { t } = useTranslation(['confirmModal']);
-  const { updateTaskDataState } = tasksSlice.actions;
+  const { setIsDeleteTask, updateTaskDataState } = tasksSlice.actions;
 
   const handlerEditTask = () => {
     setIsEditTask(true);
@@ -62,19 +57,9 @@ export const Task = ({
       id: taskId,
     };
     setIsEditTask(false);
+
     dispatch(updateTaskDataState({ task: dataToUpdateTask, columnId: columnId }));
     dispatch(updateTaskAsync(dataToUpdateTask));
-  };
-
-  const handleDeleteTask = () => {
-    setIsDeleteTaskModal(false);
-    const dataToDelete = {
-      boardId: boardId,
-      columnId: columnId,
-      taskId: taskId,
-    };
-    dispatch(deleteTaskAsync(dataToDelete));
-    dispatch(deleteTaskFromState(taskId));
   };
 
   return (
@@ -128,15 +113,16 @@ export const Task = ({
             )}
             {!isEditTask && (
               <HighlightOffIcon
-                onClick={() => setIsDeleteTaskModal(true)}
+                onClick={() =>
+                  dispatch(
+                    setIsDeleteTask({
+                      isDeleteTask: true,
+                      activeTaskColumnId: columnId,
+                      activeTaskId: taskId,
+                    })
+                  )
+                }
                 className={clsx(styles.deleteBtn, styles.button)}
-              />
-            )}
-            {isDeleteTaskModal && (
-              <ConfirmModal
-                text={t('deleteTask')}
-                onNo={() => setIsDeleteTaskModal(false)}
-                onYes={handleDeleteTask}
               />
             )}
           </div>
