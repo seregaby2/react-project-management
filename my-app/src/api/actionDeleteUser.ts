@@ -4,19 +4,17 @@ import { SingupSlice } from '../store/reducers/authSlice';
 import { ISingUp } from '../interfaces/interfaceAuth';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 import { CreateTextBackEndError } from '../utils/treatmentErrors';
-
-const baseUrl = 'https://young-hamlet-94914.herokuapp.com';
+import { BASE_URL, TOKEN } from '../constants/api';
 
 export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(SingupSlice.actions.authFetching());
 
     const dataUser: ISingUp = JSON.parse(localStorage.getItem('dataUser') || '');
-    const token = localStorage.getItem('token') || '';
 
-    await axios.delete(`${baseUrl}/users/${dataUser.id}`, {
+    await axios.delete(`${BASE_URL}/users/${dataUser.id}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
     });
 

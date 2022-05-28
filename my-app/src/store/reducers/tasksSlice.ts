@@ -11,22 +11,38 @@ interface ITaskSlice {
   tasks: ITaskResponse[];
   isLoading: boolean;
   error: string;
-  activeColumnId: string;
+  activeTaskColumnId: string;
+  isDeleteTask: boolean;
+  activeTaskId: string;
 }
 
 const initialState: ITaskSlice = {
   tasks: [],
   isLoading: false,
   error: '',
-  activeColumnId: '',
+  activeTaskColumnId: '',
+  isDeleteTask: false,
+  activeTaskId: '',
 };
 
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    getActiveColumnId(state, action: PayloadAction<string>) {
-      state.activeColumnId = action.payload;
+    setIsDeleteTask(
+      state,
+      action: PayloadAction<{
+        isDeleteTask: boolean;
+        activeTaskColumnId: string;
+        activeTaskId: string;
+      }>
+    ) {
+      state.activeTaskColumnId = action.payload.activeTaskColumnId;
+      state.isDeleteTask = action.payload.isDeleteTask;
+      state.activeTaskId = action.payload.activeTaskId;
+    },
+    setActiveColumnId(state, action: PayloadAction<string>) {
+      state.activeTaskColumnId = action.payload;
     },
     deleteTaskFromState(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);

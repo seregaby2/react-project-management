@@ -1,9 +1,6 @@
-import { LinearProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BoardControls, Column, ColumnModal, TaskModal } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
-import styles from './BoardPage.module.scss';
+import { LinearProgress } from '@mui/material';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import {
   createTaskAsync,
@@ -21,11 +18,31 @@ export const BoardPage = () => {
   const { deleteTaskFromState } = tasksSlice.actions;
 
   // TODO remove!!!!!
-  const temporaryBoardID = 'e1878d40-0f75-46b9-a043-dd89110101cb';
+  const temporaryBoardID = 'fffa11f4-c201-46be-979e-5eef487c3547';
 
   useEffect(() => {
     dispatch(getColumnAsync(temporaryBoardID));
   }, []);
+
+  const handleDeleteColumn = () => {
+    const deleteDataColumn = {
+      boardId: temporaryBoardID,
+      columnId: activeColumnId,
+    };
+    dispatch(deleteColumnAsync(deleteDataColumn));
+    dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }));
+  };
+
+  const handleDeleteTask = () => {
+    const dataToDelete = {
+      boardId: temporaryBoardID,
+      columnId: activeTaskColumnId,
+      taskId: activeTaskId,
+    };
+    dispatch(deleteTaskAsync(dataToDelete));
+    dispatch(deleteTaskFromState(activeTaskId));
+    dispatch(setIsDeleteTask({ isDeleteTask: false, activeTaskColumnId: '', activeTaskId: '' }));
+  };
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, type } = result;
@@ -96,6 +113,27 @@ export const BoardPage = () => {
         <LinearProgress style={{ marginTop: '2vh', width: '100%', margin: '50px 0' }} />
       ) : (
         <DragDropContext onDragEnd={onDragEnd}>
+          {isDeleteColumn && (
+            <ConfirmModal
+              text={t('deleteColumn')}
+              onNo={() =>
+                dispatch(setIsDeleteColumn({ isDeleteColumn: false, activeColumnId: '' }))
+              }
+              onYes={handleDeleteColumn}
+            />
+          )}
+          {isDeleteTask && (
+            <ConfirmModal
+              text={t('deleteTask')}
+              onNo={() =>
+                dispatch(
+                  setIsDeleteTask({ isDeleteTask: false, activeTaskColumnId: '', activeTaskId: '' })
+                )
+              }
+              onYes={handleDeleteTask}
+            />
+          )}
+          <ButtonToMain />
           <div className={styles.infoAboutBoard}>
             <h2>Board title</h2>
             <p className={styles.description}>

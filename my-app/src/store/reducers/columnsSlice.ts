@@ -12,12 +12,16 @@ interface IColumnsSlice {
   columns: IColumnRequest[];
   isLoading: boolean;
   error: string;
+  isDeleteColumn: boolean;
+  activeColumnId: string;
 }
 
 const initialState: IColumnsSlice = {
   columns: [],
   isLoading: false,
   error: '',
+  isDeleteColumn: false,
+  activeColumnId: '',
 };
 
 export const columnsSlice = createSlice({
@@ -51,6 +55,13 @@ export const columnsSlice = createSlice({
           action.payload.data,
         ].sort((a, b) => a.order - b.order);
       }
+    },
+    setIsDeleteColumn(
+      state,
+      action: PayloadAction<{ isDeleteColumn: boolean; activeColumnId: string }>
+    ) {
+      state.isDeleteColumn = action.payload.isDeleteColumn;
+      state.activeColumnId = action.payload.activeColumnId;
     },
   },
   extraReducers: {
