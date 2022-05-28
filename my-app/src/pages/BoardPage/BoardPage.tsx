@@ -2,20 +2,50 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { LinearProgress } from '@mui/material';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useTranslation } from 'react-i18next';
+import styles from './BoardPage.module.scss';
 import {
-  createTaskAsync,
-  deleteTaskAsync,
-  updateTaskAsync,
-} from '../../store/actions/tasksActions';
+  BoardControls,
+  ButtonToMain,
+  Column,
+  ColumnModal,
+  ConfirmError,
+  ConfirmModal,
+  TaskModal,
+} from '../../components';
+import {
+  deleteColumnAsync,
+  getColumnAsync,
+  updateColumAsync,
+} from '../../store/actions/columnsActions';
+import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
+import { columnsSlice } from '../../store/reducers/columnsSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
   const dispatch = useAppDispatch();
-  const { columns, isLoading, error } = useAppSelector((state) => state.reducerColumns);
-  const { tasks } = useAppSelector((state) => state.reducerTasks);
-  const { deleteTaskFromState } = tasksSlice.actions;
+  const {
+    columns,
+    isLoading,
+    error: columnError,
+    isDeleteColumn,
+    activeColumnId,
+  } = useAppSelector((state) => state.reducerColumns);
+  const {
+    tasks,
+    activeTaskColumnId,
+    activeTaskId,
+    isDeleteTask,
+    error: taskError,
+  } = useAppSelector((state) => state.reducerTasks);
+  const { updateTaskDataState, deleteTaskFromState, setIsDeleteTask, clearTaskError } =
+    tasksSlice.actions;
+  const { updateColumState, setIsDeleteColumn, clearColumnError } = columnsSlice.actions;
+  const { t } = useTranslation(['confirmModal']);
+  const navigate = useNavigate();
 
   // TODO remove!!!!!
   const temporaryBoardID = 'fffa11f4-c201-46be-979e-5eef487c3547';
@@ -69,9 +99,10 @@ export const BoardPage = () => {
       const home = [...tasks]
         .filter((task) => task.columnId === source.droppableId)
         .sort((a, b) => (a.order as number) - (b.order as number));
-      //const foreign = [...tasks]
-      //  .filter((task) => task.columnId === destination.droppableId)
-      //  .sort((a, b) => (a.order as number) - (b.order as number));
+      const foreign = [...tasks]
+        .filter((task) => task.columnId === destination.droppableId)
+        .sort((a, b) => (a.order as number) - (b.order as number));
+
       if (source.droppableId === destination.droppableId) {
         const dataToUpdateTask = {
           title: home[source.index].title,
