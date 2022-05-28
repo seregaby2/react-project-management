@@ -17,3 +17,4 @@ export { Task } from './Task/Task';
 export { EditColumnTitle } from './EditColumnTitle/EditColumnTitle';
 export { ButtonToMain } from './ButtonToMain/ButtonToMain';
 export { ConfirmModal } from './ConfirmModal/ConfirmModal';
+export { ConfirmError } from './ConfirmError/ConfirmError';

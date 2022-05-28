@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { BASE_URL, TOKEN } from '../../constants/api';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
 
@@ -20,7 +20,8 @@ export const getAllTasksAsync = createAsyncThunk(
 
       return { data: response.data, columnId };
     } catch (error) {
-      thunkApi.rejectWithValue('Tasks not found.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -45,7 +46,8 @@ export const createTaskAsync = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      thunkApi.rejectWithValue('Unable to create task.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -62,7 +64,8 @@ export const deleteTaskAsync = createAsyncThunk(
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
     } catch (error) {
-      thunkApi.rejectWithValue('Deletion is not possible');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -110,7 +113,8 @@ export const updateTaskAsync = createAsyncThunk(
       );
       return { task: response.data, columnId: columnId };
     } catch (error) {
-      thunkApi.rejectWithValue('Updating is not possible');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );

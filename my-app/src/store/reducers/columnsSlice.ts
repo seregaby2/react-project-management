@@ -63,6 +63,9 @@ export const columnsSlice = createSlice({
       state.isDeleteColumn = action.payload.isDeleteColumn;
       state.activeColumnId = action.payload.activeColumnId;
     },
+    clearColumnError(state) {
+      state.error = '';
+    },
   },
   extraReducers: {
     [getColumnAsync.pending.type]: (state) => {
@@ -82,32 +85,41 @@ export const columnsSlice = createSlice({
     },
     [addColumnAsync.pending.type]: (state) => {
       state.isLoading = true;
+      state.error = '';
     },
     [addColumnAsync.fulfilled.type]: (state, action: PayloadAction<IColumnRequest>) => {
       state.isLoading = false;
       state.columns = [...state.columns, action.payload];
+      state.error = '';
     },
-    [addColumnAsync.rejected.type]: (state) => {
+    [addColumnAsync.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+      state.error = action.payload;
     },
     [deleteColumnAsync.pending.type]: (state) => {
       state.isLoading = true;
+      state.error = '';
     },
     [deleteColumnAsync.fulfilled.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       state.columns = state.columns.filter((column) => column.id !== action.payload);
+      state.error = '';
     },
-    [deleteColumnAsync.rejected.type]: (state) => {
+    [deleteColumnAsync.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+      state.error = action.payload;
     },
     [updateColumAsync.pending.type]: (state) => {
       state.isLoading = true;
+      state.error = '';
     },
     [updateColumAsync.fulfilled.type]: (state) => {
       state.isLoading = false;
+      state.error = '';
     },
-    [updateColumAsync.rejected.type]: (state) => {
+    [updateColumAsync.rejected.type]: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
