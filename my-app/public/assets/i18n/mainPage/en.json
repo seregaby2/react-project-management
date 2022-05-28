@@ -1,7 +1,8 @@
 {
     "search": "Search...",
     "filter": "Filter",
-    "title": "title",
+    "title": "Title",
     "createBoard": "create board",
-    "noBoards": "no boards"
+    "noBoards": "no boards",
+    "description": "Description"
 }

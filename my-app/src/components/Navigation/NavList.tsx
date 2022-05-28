@@ -2,12 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SwitchLocalization } from '..';
+import { useAppDispatch } from '../../hooks/redux';
+import { actionsCreateBoardForm } from '../../store/reducers/createBoardFormSlice';
 
 interface INavList {
   handleisOpenMenu?: () => void;
 }
 
 export const NavList = ({ handleisOpenMenu }: INavList) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isAuth = localStorage.getItem('checkAuthUser');
   const { t } = useTranslation(['header']);
@@ -16,6 +19,7 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
     if (handleisOpenMenu) {
       handleisOpenMenu();
     }
+    dispatch(actionsCreateBoardForm.showCreateBoardForm());
   };
 
   const handleToProfile = () => {

@@ -3,5 +3,6 @@
     "filter": "Фильтр",
     "title": "Заголовок",
     "createBoard": "создать проект",
-    "noBoards": "нет проектов"
+    "noBoards": "нет проектов",
+    "description": "Описание"
 }
