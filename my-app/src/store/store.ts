@@ -4,6 +4,7 @@ import { reducerBoards } from './reducers/boardsSlice';
 import { reducerColumns } from './reducers/columnsSlice';
 import { reducerHelpVars } from './reducers/helpVarSlice';
 import { reducerTasks } from './reducers/tasksSlice';
+import { reducerCreateBoardForm } from './reducers/createBoardFormSlice';
 
 const rootReducer = combineReducers({
   reducerSingupRequest,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   reducerBoards,
   reducerColumns,
   reducerTasks,
+  reducerCreateBoardForm,
 });
 
 export const setupStore = () => {

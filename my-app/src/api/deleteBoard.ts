@@ -2,8 +2,10 @@ import axios from 'axios';
 import { AppDispatch } from '../store/store';
 import { boardsActions } from '../store/reducers/boardsSlice';
 import { IBoard } from '../interfaces/IBoard';
+import { CreateTextBackEndError } from '../utils/treatmentErrors';
+import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 
-const baseUrl = 'https://young-hamlet-94914.herokuapp.com/boards';
+const baseUrl = 'https://vast-harbor-78608.herokuapp.com/boards';
 
 export const deleteBoard = (id: string) => async (dispatch: AppDispatch) => {
   try {
@@ -14,6 +16,10 @@ export const deleteBoard = (id: string) => async (dispatch: AppDispatch) => {
     });
     dispatch(boardsActions.boardDeleteSuccess(id));
   } catch (e) {
-    dispatch(boardsActions.boardsFetchError('Ooops...Smth went wrong'));
+    if (e instanceof Error) {
+      dispatch(boardsActions.boardsFetchError(e.message));
+      dispatch(CreateTextBackEndError(e.message));
+      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
+    }
   }
 };

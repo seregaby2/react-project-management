@@ -37,6 +37,7 @@ const MainFilter = ({ inputHandler }: IMainFilterProps) => {
             onChange={(e) => setFilter(e.target.value as FilterType)}
           >
             <MenuItem value={'title'}>{t('title')}</MenuItem>
+            <MenuItem value={'description'}>{t('description')}</MenuItem>
           </Select>
         </FormControl>
       </FormGroup>
