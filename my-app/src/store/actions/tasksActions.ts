@@ -1,10 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { BASE_URL, TOKEN } from '../../constants/api';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
-import { getTokenFromLS } from '../../utils';
-
-const BASE_URL = 'https://young-hamlet-94914.herokuapp.com';
-const TOKEN = getTokenFromLS();
 
 interface IGetAllTasksAsync {
   boardId: string;
@@ -23,7 +20,8 @@ export const getAllTasksAsync = createAsyncThunk(
 
       return { data: response.data, columnId };
     } catch (error) {
-      thunkApi.rejectWithValue('Tasks not found.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -48,7 +46,8 @@ export const createTaskAsync = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      thunkApi.rejectWithValue('Unable to create task.');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
@@ -64,26 +63,35 @@ export const deleteTaskAsync = createAsyncThunk(
       await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
-
-      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
     } catch (error) {
-      thunkApi.rejectWithValue('Deletion is not possible');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );
 
 export interface IUpdateTaskAsync extends IGetAllTasksAsync {
   title: string;
-  order: number;
+  order?: number;
   description: string;
   userId: string;
-  taskId: string;
+  id: string;
+  droppableColumnId?: string;
 }
 
 export const updateTaskAsync = createAsyncThunk(
   'tasks/updateTask',
   async (
-    { title, order, description, userId, taskId, boardId, columnId }: IUpdateTaskAsync,
+    {
+      title,
+      order,
+      description,
+      userId,
+      id: taskId,
+      boardId,
+      columnId,
+      droppableColumnId,
+    }: IUpdateTaskAsync,
     thunkApi
   ) => {
     const dataToUpdateTask = {
@@ -92,7 +100,7 @@ export const updateTaskAsync = createAsyncThunk(
       description: description,
       userId: userId,
       boardId: boardId,
-      columnId: columnId,
+      columnId: droppableColumnId ? droppableColumnId : columnId,
     };
 
     try {
@@ -103,11 +111,10 @@ export const updateTaskAsync = createAsyncThunk(
           headers: { Authorization: `Bearer ${TOKEN}` },
         }
       );
-
-      thunkApi.dispatch(getAllTasksAsync({ boardId, columnId }));
-      return { task: response.data, taskId: taskId };
+      return { task: response.data, columnId: columnId };
     } catch (error) {
-      thunkApi.rejectWithValue('Updating is not possible');
+      const err = error as AxiosError;
+      return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
 );

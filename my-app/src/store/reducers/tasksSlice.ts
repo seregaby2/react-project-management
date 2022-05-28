@@ -11,22 +11,137 @@ interface ITaskSlice {
   tasks: ITaskResponse[];
   isLoading: boolean;
   error: string;
-  activeColumnId: string;
+  activeTaskColumnId: string;
+  isDeleteTask: boolean;
+  activeTaskId: string;
 }
 
 const initialState: ITaskSlice = {
   tasks: [],
   isLoading: false,
   error: '',
-  activeColumnId: '',
+  activeTaskColumnId: '',
+  isDeleteTask: false,
+  activeTaskId: '',
 };
 
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    getActiveColumnId(state, action: PayloadAction<string>) {
-      state.activeColumnId = action.payload;
+    clearTaskError(state) {
+      state.error = '';
+    },
+    setIsDeleteTask(
+      state,
+      action: PayloadAction<{
+        isDeleteTask: boolean;
+        activeTaskColumnId: string;
+        activeTaskId: string;
+      }>
+    ) {
+      state.activeTaskColumnId = action.payload.activeTaskColumnId;
+      state.isDeleteTask = action.payload.isDeleteTask;
+      state.activeTaskId = action.payload.activeTaskId;
+    },
+    setActiveColumnId(state, action: PayloadAction<string>) {
+      state.activeTaskColumnId = action.payload;
+    },
+    deleteTaskFromState(state, action: PayloadAction<string>) {
+      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+    },
+    updateTaskDataState(state, action: PayloadAction<{ task: ITaskResponse; columnId: string }>) {
+      const prevColumnId = action.payload.columnId;
+      const currentColumnId = action.payload.task.columnId;
+
+      if (prevColumnId !== currentColumnId) {
+        // Если меняется колонка, то пересчитываются ordera как в новой так и в старой колонке
+        let tasksFromNewColumnFiltered = [
+          ...state.tasks.filter((task) => task.columnId === currentColumnId),
+        ].sort((a, b) => (a.order as number) - (b.order as number));
+
+        const tasksFromPrevColumnFiltered = [
+          ...state.tasks.filter((task) => task.columnId === prevColumnId),
+        ]
+          .filter((task) => task.id !== action.payload.task.id)
+          .sort((a, b) => (a.order as number) - (b.order as number));
+
+        // orders в новой и старой колонке
+        const taskOrderInPrevColumn = [...state.tasks].find(
+          (task) => task.id === action.payload.task.id
+        )?.order as number;
+        const taskOrderInNewColumn = action.payload.task.order as number;
+
+        for (let i = taskOrderInPrevColumn - 1; i < tasksFromPrevColumnFiltered.length; i++) {
+          (tasksFromPrevColumnFiltered[i].order as number) -= 1;
+        }
+        for (let i = taskOrderInNewColumn - 1; i < tasksFromNewColumnFiltered.length; i++) {
+          (tasksFromNewColumnFiltered[i].order as number) += 1;
+        }
+        tasksFromNewColumnFiltered = [...tasksFromNewColumnFiltered, action.payload.task].sort(
+          (a, b) => (a.order as number) - (b.order as number)
+        );
+
+        // Обновление стейта с тасками
+        state.tasks = [
+          ...state.tasks
+            .filter((task) => task.columnId !== currentColumnId)
+            .filter((task) => task.columnId !== prevColumnId),
+          ...tasksFromNewColumnFiltered,
+          ...tasksFromPrevColumnFiltered,
+        ];
+      } else {
+        // Если ордер в ходе апдейта изменился!!!
+        const prevOrder = [...state.tasks].find((task) => task.id === action.payload.task.id)
+          ?.order as number;
+        const currentOrder = action.payload.task.order as number;
+        if (currentOrder !== prevOrder) {
+          let tasksFromColumnFiltered = [
+            ...state.tasks.filter((task) => task.columnId === action.payload.columnId),
+          ].sort((a, b) => (a.order as number) - (b.order as number));
+          if (currentOrder < prevOrder) {
+            for (let i = currentOrder - 1; i < prevOrder - 1; i++) {
+              if (tasksFromColumnFiltered.length > 1) {
+                (tasksFromColumnFiltered[i].order as number) += 1;
+              }
+            }
+            tasksFromColumnFiltered = [
+              ...tasksFromColumnFiltered.filter((task) => task.id !== action.payload.task.id),
+              action.payload.task,
+            ].sort((a, b) => (a.order as number) - (b.order as number));
+            state.tasks = [
+              ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+              ...tasksFromColumnFiltered,
+            ];
+          }
+          if (currentOrder > prevOrder) {
+            for (let i = prevOrder; i < currentOrder; i++) {
+              (tasksFromColumnFiltered[i].order as number) -= 1;
+            }
+            tasksFromColumnFiltered = [
+              ...tasksFromColumnFiltered.filter((task) => task.id !== action.payload.task.id),
+              action.payload.task,
+            ].sort((a, b) => (a.order as number) - (b.order as number));
+            state.tasks = [
+              ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+              ...tasksFromColumnFiltered,
+            ];
+          }
+        } else {
+          // Если ордер в ходе апдейта не изменился
+          const taskFiltered = [
+            ...state.tasks
+              .filter((task) => task.columnId === action.payload.columnId)
+              .filter((task) => task.id !== action.payload.task.id),
+            action.payload.task,
+          ].sort((a, b) => (a.order as number) - (b.order as number));
+
+          state.tasks = [
+            ...state.tasks.filter((task) => task.columnId !== action.payload.columnId),
+            ...taskFiltered,
+          ];
+        }
+      }
     },
   },
   extraReducers: {
@@ -76,13 +191,8 @@ export const tasksSlice = createSlice({
       state.isLoading = true;
       state.error = '';
     },
-    [updateTaskAsync.fulfilled.type]: (
-      state,
-      action: PayloadAction<{ task: ITaskResponse; taskId: string }>
-    ) => {
+    [updateTaskAsync.fulfilled.type]: (state) => {
       state.isLoading = false;
-      const taskIndex = state.tasks.findIndex((task) => task.id === action.payload.taskId);
-      state.tasks = [...state.tasks, ...state.tasks.splice(taskIndex, 0, action.payload.task)];
       state.error = '';
     },
     [updateTaskAsync.rejected.type]: (state, action: PayloadAction<string>) => {

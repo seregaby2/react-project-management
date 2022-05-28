@@ -3,8 +3,9 @@ import clsx from 'clsx';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import { useForm } from 'react-hook-form';
 import styles from './ColumnModal.module.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { addColumnAsync } from '../../store/actions/columnsActions';
+import { useTranslation } from 'react-i18next';
 
 interface IColumn {
   setCreateColumn: (value: boolean) => void;
@@ -17,12 +18,7 @@ interface IFormColumn {
 
 export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
   const dispatch = useAppDispatch();
-  const { columns } = useAppSelector((state) => state.reducerColumns);
-  let lastOrder: number;
-  if (columns.length > 0) {
-    lastOrder = [...columns].sort((a, b) => a.order - b.order)[columns.length - 1].order + 1;
-  }
-
+  const { t } = useTranslation(['columnModal']);
   const {
     register,
     handleSubmit,
@@ -48,7 +44,6 @@ export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
       boardId: boardId,
       data: {
         title: data.title,
-        order: columns.length === 0 ? 0 : lastOrder,
       },
     };
     dispatch(addColumnAsync(dataToAddColumn));
@@ -61,7 +56,7 @@ export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
         className={styles.columnContainer}
         onSubmit={handleSubmit(handleCreateColumn)}
       >
-        <label htmlFor="columnTitleModal">Column title</label>
+        <label htmlFor="columnTitleModal">{t('columnTitle')}</label>
         <input
           {...register('title', {
             required: 'This field is require to fill',
@@ -82,14 +77,14 @@ export const ColumnModal = ({ setCreateColumn, boardId }: IColumn) => {
         {errors.title && <p className={styles.error}>{errors.title.message}</p>}
         <div className={styles.controls}>
           <button className={styles.button} type="submit">
-            create
+            {t('create')}
           </button>
           <button
             className={clsx(styles.button, styles.cancel)}
             onClick={handleCancelColumn}
             type="button"
           >
-            cancel
+            {t('cancel')}
           </button>
         </div>
       </form>

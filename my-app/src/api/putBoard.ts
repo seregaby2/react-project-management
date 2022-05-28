@@ -4,19 +4,17 @@ import { boardsActions } from '../store/reducers/boardsSlice';
 import { IBoard } from '../interfaces/IBoard';
 import { CreateTextBackEndError } from '../utils/treatmentErrors';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-
-const baseUrl = 'https://vast-harbor-78608.herokuapp.com/boards';
+import { BASE_URL, TOKEN } from '../constants/api';
 
 export const putBoard =
   (id: string, title: string, description: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(boardsActions.boardPutStart(id));
-      const token = localStorage.getItem('token') || '';
       const response = await axios.put<IBoard>(
-        baseUrl + `/${id}`,
+        `${BASE_URL}/boards/${id}`,
         { title, description },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${TOKEN}` },
         }
       );
       dispatch(boardsActions.boardPutSuccess(response.data));

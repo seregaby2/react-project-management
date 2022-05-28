@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Task } from '..';
+import { EditColumnTitle, Task } from '..';
 import styles from './Column.module.scss';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { EditColumnTitle } from '../EditColumnTitle/EditColumnTitle';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { deleteColumnAsync, updateColumAsync } from '../../store/actions/columnsActions';
+import { updateColumAsync } from '../../store/actions/columnsActions';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getAllTasksAsync } from '../../store/actions/tasksActions';
 import { tasksSlice } from '../../store/reducers/tasksSlice';
-import { Draggable } from 'react-beautiful-dnd';
-import { v4 as uuidv4 } from 'uuid';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { useTranslation } from 'react-i18next';
+import { columnsSlice } from '../../store/reducers/columnsSlice';
 
 interface IColumn {
   columnId: string;
@@ -23,11 +23,11 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const dispatch = useAppDispatch();
-  const { columns, column } = useAppSelector((store) => store.reducerColumns);
+  const { columns } = useAppSelector((store) => store.reducerColumns);
   const { tasks } = useAppSelector((state) => state.reducerTasks);
-  const { getActiveColumnId } = tasksSlice.actions;
-
-  const parsedTasks = [...tasks];
+  const { setActiveColumnId } = tasksSlice.actions;
+  const { t: addTaskTranslate } = useTranslation(['boardPage']);
+  const { updateColumState, setIsDeleteColumn } = columnsSlice.actions;
 
   useEffect(() => {
     const dataToGetTasks = {
@@ -35,16 +35,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
       columnId: columnId,
     };
     dispatch(getAllTasksAsync(dataToGetTasks));
-  }, [dispatch, columnId, boardId]);
-
-  const handleDeleteColumn = () => {
-    const deleteDataColumn = {
-      boardId: boardId,
-      columnId: columnId,
-    };
-
-    dispatch(deleteColumnAsync(deleteDataColumn));
-  };
+  }, []);
 
   const handleAcceptChangingTitle = () => {
     const columnData = { ...columns.find((column) => column.id === columnId) };
@@ -56,7 +47,7 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
       boardId: boardId,
       data: columnData as IColumnRequest,
     };
-
+    dispatch(updateColumState(dataToUpdateColumn));
     dispatch(updateColumAsync(dataToUpdateColumn));
     setIsEditTitle(false);
   };
@@ -79,59 +70,71 @@ export const Column = ({ columnId, title, setCreateTask, boardId, index }: IColu
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <div className={styles.buttonContainer}>
-            <button
-              className={styles.addTask}
-              onClick={() => {
-                setCreateTask(true);
-                dispatch(getActiveColumnId(columnId));
-              }}
-            >
-              add task
-            </button>
-            <HighlightOffIcon
-              id={columnId}
-              onClick={handleDeleteColumn}
-              className={styles.deleteBtn}
-            />
-          </div>
-          {isEditTitle && (
-            <EditColumnTitle
-              id={columnId}
-              titleText={column ? column.title : title}
-              handleAcceptChangingTitle={handleAcceptChangingTitle}
-              handleCancelChangingTitle={handleCancelChangingTitle}
-              handleSetTitleText={handleSetTitleText}
-            />
-          )}
-          {!isEditTitle && (
-            <h4
-              className={styles.title}
-              onClick={() => {
-                setIsEditTitle(true);
-              }}
-            >
-              {title}
-            </h4>
-          )}
-          {parsedTasks &&
-            parsedTasks
-              //.sort((a, b) => a.order - b.order)
-              .filter((task) => task.columnId === columnId)
-              .map((task) => {
-                return (
-                  <Task
-                    boardId={task.boardId}
-                    columnId={task.columnId}
-                    taskId={task.id}
-                    key={uuidv4()}
-                    title={task.title}
-                    description={task.description}
-                    userId={task.userId}
-                    order={task.order}
+          <Droppable droppableId={columnId} type="task">
+            {(provided, snapshot) => (
+              <div
+                className={styles.columnHelper}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                data-is-dragging={snapshot.isDraggingOver}
+              >
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.addTask}
+                    onClick={() => {
+                      setCreateTask(true);
+                      dispatch(setActiveColumnId(columnId));
+                    }}
+                  >
+                    {addTaskTranslate('addTask')}
+                  </button>
+                  <HighlightOffIcon
+                    id={columnId}
+                    onClick={() =>
+                      dispatch(
+                        setIsDeleteColumn({ isDeleteColumn: true, activeColumnId: columnId })
+                      )
+                    }
+                    className={styles.deleteBtn}
                   />
-                );
-              })}
+                </div>
+                {isEditTitle && (
+                  <EditColumnTitle
+                    id={columnId}
+                    titleText={title}
+                    handleAcceptChangingTitle={handleAcceptChangingTitle}
+                    handleCancelChangingTitle={handleCancelChangingTitle}
+                    handleSetTitleText={handleSetTitleText}
+                  />
+                )}
+                {!isEditTitle && (
+                  <h4 className={styles.title} onClick={() => setIsEditTitle(true)}>
+                    {title}
+                  </h4>
+                )}
+                {tasks &&
+                  [...tasks]
+                    .sort((a, b) => (a.order as number) - (b.order as number))
+                    .filter((task) => task.columnId === columnId)
+                    .map((task, index) => {
+                      return (
+                        <Task
+                          key={`${task.id}-${index}`}
+                          index={index}
+                          boardId={task.boardId}
+                          columnId={task.columnId}
+                          taskId={task.id}
+                          title={task.title}
+                          description={task.description}
+                          userId={task.userId}
+                          order={task.order as number}
+                        />
+                      );
+                    })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
       )}
     </Draggable>
