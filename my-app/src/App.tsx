@@ -7,6 +7,8 @@ import { CreateBoardForm } from './components/CreateBoardForm/CreateBoardForm';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+const ERROR_403 = 'Request failed with status code 403. Forbidden.';
+
 function App() {
   const { errorMessage, successMessage } = useAppSelector((state) => state.reducerHelpVars);
   const { isShowCreateBoardForm } = useAppSelector((state) => state.reducerCreateBoardForm);
@@ -17,7 +19,7 @@ function App() {
   const handleClickOk = () => {
     dispatch(HelpVarSlice.actions.setErrorMessage(''));
     dispatch(HelpVarSlice.actions.setSuccessMessage(''));
-    navigate('/');
+    if (errorMessage !== ERROR_403) navigate('/');
   };
   return (
     <>
