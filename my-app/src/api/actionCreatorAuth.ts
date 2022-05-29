@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchDataLogin } from './actionSignin';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { CreateTextBackEndError } from '../utils/treatmentErrors';
 import { BASE_URL } from '../constants/api';
 
 export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDispatch) => {
@@ -16,13 +15,12 @@ export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDisp
       login: dataAuth.login,
       password: dataAuth.password,
     });
-    dispatch(SingupSlice.actions.authFetchingSuccess());
+
     await dispatch(fetchDataLogin(dataAuth));
   } catch (e) {
-    if (e instanceof Error) {
-      dispatch(SingupSlice.actions.authFetchingError(e.message));
-      dispatch(CreateTextBackEndError(e.message));
-      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
-    }
+    const err = e as AxiosError;
+    dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
+  } finally {
+    dispatch(SingupSlice.actions.authFetchingSuccess());
   }
 };

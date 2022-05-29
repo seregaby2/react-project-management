@@ -51,9 +51,8 @@ export const boardsSlice = createSlice({
       state.boards = state.boards.filter((board) => board.id !== action.payload);
       state.isLoading = false;
     },
-    boardsFetchError(state, action: PayloadAction<string>) {
+    boardsFetchError(state) {
       state.isLoading = false;
-      state.error = action.payload;
     },
   },
 });

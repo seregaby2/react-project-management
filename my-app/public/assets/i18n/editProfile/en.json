@@ -4,5 +4,6 @@
     "login": "login",
     "password": "password",
     "edit": "edit",
-    "deleteUser": "delete user"
+    "deleteUser": "delete user",
+    "updateUser": "user's data updated"
 }

@@ -55,125 +55,125 @@ export function ProfilePage() {
 
   return (
     <div className={styles.formAuthPage}>
-      {/* {isLoading ? (
+      {isLoading ? (
         <>
           <div className={styles.wrapperOverlay}></div>
           <LinearProgress style={{ marginTop: '2vh', width: '50%', zIndex: '300' }} />
         </>
       ) : (
-        <> */}
-      {isConfirmalModal && (
-        <ConfirmModal
-          text={t('deleteUserModal', { ns: 'confirmModal' })}
-          onYes={() => deleteUser()}
-          onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
-        />
+        <>
+          {isConfirmalModal && (
+            <ConfirmModal
+              text={t('deleteUserModal', { ns: 'confirmModal' })}
+              onYes={() => deleteUser()}
+              onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
+            />
+          )}
+          <Typography variant="h4" component="div">
+            {t('editProfile')}
+          </Typography>
+          <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              control={control}
+              name="name"
+              defaultValue={dataUser.name || ''}
+              rules={nameValidation}
+              render={({ field }) => (
+                <TextField
+                  label={t('name')}
+                  size="small"
+                  margin="normal"
+                  fullWidth
+                  onChange={(e) => field.onChange(e)}
+                  value={field.value}
+                  error={!!errors.name?.message}
+                  helperText={errors.name?.message}
+                  FormHelperTextProps={{
+                    style: {
+                      position: 'absolute',
+                      top: '35px',
+                    },
+                  }}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="login"
+              defaultValue={dataUser.login || ''}
+              rules={loginValidation}
+              render={({ field }) => (
+                <TextField
+                  label={t('login')}
+                  size="small"
+                  margin="normal"
+                  fullWidth
+                  onChange={(e) => field.onChange(e)}
+                  value={field.value}
+                  error={!!errors.login?.message}
+                  helperText={errors.login?.message}
+                  FormHelperTextProps={{
+                    style: {
+                      position: 'absolute',
+                      top: '35px',
+                    },
+                  }}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="password"
+              rules={passwordValidation}
+              render={({ field }) => (
+                <TextField
+                  type="password"
+                  label={t('password')}
+                  size="small"
+                  margin="normal"
+                  fullWidth
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  value={field.value || ''}
+                  error={!!errors.password?.message}
+                  helperText={errors.password?.message}
+                  FormHelperTextProps={{
+                    style: {
+                      position: 'absolute',
+                      top: '35px',
+                    },
+                  }}
+                />
+              )}
+            />
+            <div className={styles.containerButton}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  marginTop: 2,
+                }}
+              >
+                {t('edit')}
+              </Button>
+              <Button
+                type="button"
+                variant="contained"
+                fullWidth
+                color="error"
+                onClick={confirmDelete}
+                sx={{
+                  marginTop: 2,
+                }}
+              >
+                {t('deleteUser')}
+              </Button>
+            </div>
+          </form>
+        </>
       )}
-      <Typography variant="h4" component="div">
-        {t('editProfile')}
-      </Typography>
-      <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name="name"
-          defaultValue={dataUser.name || ''}
-          rules={nameValidation}
-          render={({ field }) => (
-            <TextField
-              label={t('name')}
-              size="small"
-              margin="normal"
-              fullWidth
-              onChange={(e) => field.onChange(e)}
-              value={field.value}
-              error={!!errors.name?.message}
-              helperText={errors.name?.message}
-              FormHelperTextProps={{
-                style: {
-                  position: 'absolute',
-                  top: '35px',
-                },
-              }}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="login"
-          defaultValue={dataUser.login || ''}
-          rules={loginValidation}
-          render={({ field }) => (
-            <TextField
-              label={t('login')}
-              size="small"
-              margin="normal"
-              fullWidth
-              onChange={(e) => field.onChange(e)}
-              value={field.value}
-              error={!!errors.login?.message}
-              helperText={errors.login?.message}
-              FormHelperTextProps={{
-                style: {
-                  position: 'absolute',
-                  top: '35px',
-                },
-              }}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="password"
-          rules={passwordValidation}
-          render={({ field }) => (
-            <TextField
-              type="password"
-              label={t('password')}
-              size="small"
-              margin="normal"
-              fullWidth
-              onChange={(e) => {
-                field.onChange(e);
-              }}
-              value={field.value || ''}
-              error={!!errors.password?.message}
-              helperText={errors.password?.message}
-              FormHelperTextProps={{
-                style: {
-                  position: 'absolute',
-                  top: '35px',
-                },
-              }}
-            />
-          )}
-        />
-        <div className={styles.containerButton}>
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{
-              marginTop: 2,
-            }}
-          >
-            {t('edit')}
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            fullWidth
-            color="error"
-            onClick={confirmDelete}
-            sx={{
-              marginTop: 2,
-            }}
-          >
-            {t('deleteUser')}
-          </Button>
-        </div>
-      </form>
-      {/* </>
-      )} */}
     </div>
   );
 }
