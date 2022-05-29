@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios';
 import { BASE_URL } from '../../constants/api';
 import { IColumnRequest } from '../../interfaces/interfaceColumns';
 import { getTokenFromLS } from '../../utils';
+import { SingupSlice } from '../reducers/authSlice';
 
 export const getColumnAsync = createAsyncThunk(
   'columns/geColumns',
@@ -18,6 +19,9 @@ export const getColumnAsync = createAsyncThunk(
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -44,6 +48,9 @@ export const addColumnAsync = createAsyncThunk(
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -68,6 +75,9 @@ export const deleteColumnAsync = createAsyncThunk(
       return columnId;
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -100,6 +110,9 @@ export const updateColumAsync = createAsyncThunk(
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }

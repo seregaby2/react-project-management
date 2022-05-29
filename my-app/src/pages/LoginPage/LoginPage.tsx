@@ -13,8 +13,7 @@ import styles from './LoginPage.module.scss';
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.reducerSingupRequest);
-  const isAuth = localStorage.getItem('checkAuthUser');
+  const { isLoading, isTokenActive } = useAppSelector((state) => state.reducerSingupRequest);
   const navigate = useNavigate();
   const { handleSubmit, control } = useForm<ISignInForm>();
   const { t } = useTranslation(['signin']);
@@ -23,8 +22,8 @@ export function LoginPage() {
   });
 
   useEffect(() => {
-    if (isAuth) navigate('/main');
-  }, [isAuth, navigate]);
+    if (isTokenActive) navigate('/main');
+  }, [isTokenActive, navigate]);
 
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
     await dispatch(fetchDataLogin(data));

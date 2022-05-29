@@ -27,6 +27,7 @@ export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
   const [createColumn, setCreateColumn] = useState(false);
   const dispatch = useAppDispatch();
+  const { isTokenActive } = useAppSelector((state) => state.reducerSingupRequest);
   const {
     columns,
     isLoading,
@@ -151,8 +152,10 @@ export const BoardPage = () => {
               text={columnError || taskError}
               ClickOk={() => {
                 columnError
-                  ? dispatch(clearColumnError()) && navigate('/main')
-                  : dispatch(clearTaskError()) && navigate('/main');
+                  ? dispatch(clearColumnError()) &&
+                    (isTokenActive ? navigate('/main') : navigate('/'))
+                  : dispatch(clearTaskError()) &&
+                    (isTokenActive ? navigate('/main') : navigate('/'));
               }}
             />
           ) : (

@@ -1,11 +1,10 @@
 {
-    "buttonGoToMainPage": "Go to main page",
-    "signin": "sign in",
-    "signup": "sign up",
-    "projectManagement": "Progect management",
-    "descriptionProject": "A handy tool for planning work and dividing tasks. Use it if you want to achieve control over processes and improve the efficiency of your teamwork.",
-    "decriptionUnderDeveloper": "The application was created in accordance with the task of the",
-    "course": "Course - React 2022 Q1 (Stage 3)",
-    "developmentTeam": "Development team"
-    
+  "buttonGoToMainPage": "Go to main page",
+  "signin": "sign in",
+  "signup": "sign up",
+  "projectManagement": "Project management",
+  "descriptionProject": "A handy tool for planning work and dividing tasks. Use it if you want to achieve control over processes and improve the efficiency of your teamwork.",
+  "decriptionUnderDeveloper": "The application was created in accordance with the task of the",
+  "course": "Course - React 2022 Q1 (Stage 3)",
+  "developmentTeam": "Development team"
 }

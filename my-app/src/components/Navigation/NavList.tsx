@@ -2,8 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SwitchLocalization } from '..';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { actionsCreateBoardForm } from '../../store/reducers/createBoardFormSlice';
+import { SingupSlice } from '../../store/reducers/authSlice';
 
 interface INavList {
   handleisOpenMenu?: () => void;
@@ -12,7 +13,7 @@ interface INavList {
 export const NavList = ({ handleisOpenMenu }: INavList) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const isAuth = localStorage.getItem('checkAuthUser');
+  const { isTokenActive } = useAppSelector((state) => state.reducerSingupRequest);
   const { t } = useTranslation(['header']);
 
   const handleToCreateNewBoard = () => {
@@ -30,6 +31,7 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
   };
 
   const handleSignOut = () => {
+    dispatch(SingupSlice.actions.setTokenStatus(false));
     localStorage.clear();
     navigate('/');
     if (handleisOpenMenu) {
@@ -39,12 +41,12 @@ export const NavList = ({ handleisOpenMenu }: INavList) => {
 
   return (
     <ul>
-      {isAuth && <li onClick={handleToCreateNewBoard}>{t('createNewBoard')}</li>}
-      {isAuth && <li onClick={handleToProfile}>{t('editProfile')}</li>}
+      {isTokenActive && <li onClick={handleToCreateNewBoard}>{t('createNewBoard')}</li>}
+      {isTokenActive && <li onClick={handleToProfile}>{t('editProfile')}</li>}
       <li>
         <SwitchLocalization />
       </li>
-      {isAuth && <li onClick={handleSignOut}>{t('singOut')}</li>}
+      {isTokenActive && <li onClick={handleSignOut}>{t('singOut')}</li>}
     </ul>
   );
 };

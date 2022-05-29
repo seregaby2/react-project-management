@@ -13,9 +13,12 @@ export const fetchGetUsers = () => async (dispatch: AppDispatch) => {
         Authorization: `Bearer ${TOKEN}`,
       },
     });
+    dispatch(SingupSlice.actions.setTokenStatus(true));
+    localStorage.setItem('checkAuthUser', 'user autorizated');
   } catch (e) {
     if (e instanceof Error) {
-      localStorage.removeItem('checkAuthUser');
+      dispatch(SingupSlice.actions.setTokenStatus(false));
+      localStorage.clear();
     }
   } finally {
     dispatch(SingupSlice.actions.getUserFetchingSuccess());

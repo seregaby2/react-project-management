@@ -12,8 +12,8 @@ export const RequireAuth = (props: LayoutProps): JSX.Element => {
   useEffect(() => {
     dispatch(fetchGetUsers());
   }, []);
-
   const isAuth = localStorage.getItem('checkAuthUser');
+
   if (!isAuth) {
     return <Navigate to="/" />;
   }

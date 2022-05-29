@@ -9,6 +9,7 @@ const initialState: IPostRequest = {
   errorUpdateUser: '',
   errorGetUser: '',
   errorDeleteUser: '',
+  isTokenActive: false,
 };
 
 export const SingupSlice = createSlice({
@@ -63,6 +64,9 @@ export const SingupSlice = createSlice({
 
     writeAuthDataUser(state, action: PayloadAction<ISignInForm>) {
       state.dataAuth = action.payload;
+    },
+    setTokenStatus(state, action: PayloadAction<boolean>) {
+      state.isTokenActive = action.payload;
     },
   },
 });
