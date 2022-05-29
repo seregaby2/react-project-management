@@ -1,7 +1,7 @@
 @import '../../styles/variables.scss';
 
 .homePage {
-  @include flex-column-center-center;
+  @include flex-column-center;
   @include text20;
   text-align: center;
   max-width: 1920px;

@@ -1,15 +1,16 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ISignInForm, ISingUp } from '../interfaces/interfaceAuth';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 import { fetchDataLogin } from './actionSignin';
-import { CreateTextBackEndError } from '../utils/treatmentErrors';
-import { BASE_URL, TOKEN } from '../constants/api';
+import { BASE_URL } from '../constants/api';
+import { getTokenFromLS } from '../utils';
 
 export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch: AppDispatch) => {
   try {
     dispatch(SingupSlice.actions.authFetching());
+    const TOKEN = getTokenFromLS();
     const id: string = JSON.parse(localStorage.getItem('dataUser') || '').id;
     await axios.put<ISingUp>(
       `${BASE_URL}/users/${id}`,
@@ -25,11 +26,11 @@ export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch:
       }
     );
     await dispatch(fetchDataLogin(dataUpdateUser));
-    dispatch(SingupSlice.actions.updateUserFetchingSuccess());
+    dispatch(HelpVarSlice.actions.setSuccessMessage('user update'));
   } catch (e) {
-    if (e instanceof Error) {
-      dispatch(CreateTextBackEndError(e.message));
-      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
-    }
+    const err = e as AxiosError;
+    dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
+  } finally {
+    dispatch(SingupSlice.actions.updateUserFetchingSuccess());
   }
 };

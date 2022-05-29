@@ -4,19 +4,23 @@ import { ConfirmError } from './components/ConfirmError/ConfirmError';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { HelpVarSlice } from './store/reducers/helpVarSlice';
 import { CreateBoardForm } from './components/CreateBoardForm/CreateBoardForm';
+import { useTranslation } from 'react-i18next';
 
 function App() {
-  const { isBackEndErrors, errorMessage } = useAppSelector((state) => state.reducerHelpVars);
+  const { errorMessage, successMessage } = useAppSelector((state) => state.reducerHelpVars);
   const { isShowCreateBoardForm } = useAppSelector((state) => state.reducerCreateBoardForm);
-
+  const { t } = useTranslation(['editProfile']);
   const dispatch = useAppDispatch();
 
   const handleClickOk = () => {
-    dispatch(HelpVarSlice.actions.setIsBackEndErrors(false));
+    dispatch(HelpVarSlice.actions.setErrorMessage(''));
+    dispatch(HelpVarSlice.actions.setSuccessMessage(''));
   };
   return (
     <>
-      {isBackEndErrors && <ConfirmError text={errorMessage} ClickOk={handleClickOk} />}
+      {(errorMessage || successMessage) && (
+        <ConfirmError text={errorMessage || t('updateUser')} ClickOk={handleClickOk} />
+      )}
       <Header />
       <Router />
       <Footer />

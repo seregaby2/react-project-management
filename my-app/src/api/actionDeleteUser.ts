@@ -1,14 +1,15 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { ISingUp } from '../interfaces/interfaceAuth';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { CreateTextBackEndError } from '../utils/treatmentErrors';
-import { BASE_URL, TOKEN } from '../constants/api';
+import { BASE_URL } from '../constants/api';
+import { getTokenFromLS } from '../utils';
 
 export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(SingupSlice.actions.authFetching());
+    const TOKEN = getTokenFromLS();
 
     const dataUser: ISingUp = JSON.parse(localStorage.getItem('dataUser') || '');
 
@@ -18,12 +19,11 @@ export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {
       },
     });
 
-    dispatch(SingupSlice.actions.deleteUserFetchingSuccess());
     localStorage.clear();
   } catch (e) {
-    if (e instanceof Error) {
-      dispatch(CreateTextBackEndError(e.message));
-      dispatch(HelpVarSlice.actions.setIsBackEndErrors(true));
-    }
+    const err = e as AxiosError;
+    dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
+  } finally {
+    dispatch(SingupSlice.actions.deleteUserFetchingSuccess());
   }
 };

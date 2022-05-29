@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { BASE_URL, TOKEN } from '../../constants/api';
+import { BASE_URL } from '../../constants/api';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
+import { getTokenFromLS } from '../../utils';
 
 interface IGetAllTasksAsync {
   boardId: string;
@@ -12,6 +13,7 @@ export const getAllTasksAsync = createAsyncThunk(
   'tasks/getAllTasks',
   async ({ boardId, columnId }: IGetAllTasksAsync, thunkApi) => {
     try {
+      const TOKEN = getTokenFromLS();
       const response = await axios.get(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`, {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -34,6 +36,7 @@ export const createTaskAsync = createAsyncThunk(
   'tasks/createTask',
   async ({ boardId, columnId, data }: ICreateTaskAsync, thunkApi) => {
     try {
+      const TOKEN = getTokenFromLS();
       const response = await axios.post(
         `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks`,
         data,
@@ -60,6 +63,7 @@ export const deleteTaskAsync = createAsyncThunk(
   'tasks/deleteTassk',
   async ({ boardId, columnId, taskId }: IDeleteTaskAsync, thunkApi) => {
     try {
+      const TOKEN = getTokenFromLS();
       await axios.delete(`${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`, {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
@@ -104,6 +108,7 @@ export const updateTaskAsync = createAsyncThunk(
     };
 
     try {
+      const TOKEN = getTokenFromLS();
       const response = await axios.put(
         `${BASE_URL}/boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
         dataToUpdateTask,
