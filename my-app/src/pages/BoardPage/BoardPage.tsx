@@ -23,6 +23,7 @@ import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ERROR } from '../../constants';
+import { getBoards } from '../../api/getBoardsAction';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
@@ -55,6 +56,7 @@ export const BoardPage = () => {
 
   useEffect(() => {
     if (boardId) {
+      dispatch(getBoards());
       dispatch(getColumnAsync(boardId));
     }
   }, [boardId, dispatch]);
