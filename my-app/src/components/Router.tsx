@@ -10,6 +10,7 @@ import {
   LoginPage,
 } from '../pages';
 import { RequireAuth } from '../hoc/RequireAuth';
+import { RedirectMain } from '../hoc/RedirectMain';
 
 export const Router = () => {
   return (
@@ -39,8 +40,22 @@ export const Router = () => {
           </RequireAuth>
         }
       />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/signup"
+        element={
+          <RedirectMain>
+            <SignupPage />
+          </RedirectMain>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <RedirectMain>
+            <LoginPage />
+          </RedirectMain>
+        }
+      />
       <Route
         path="/profile"
         element={
