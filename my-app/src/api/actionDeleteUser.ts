@@ -3,7 +3,7 @@ import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { ISingUp } from '../interfaces/interfaceAuth';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 import { getTokenFromLS } from '../utils';
 
 export const fetchDeleteUser = () => async (dispatch: AppDispatch) => {

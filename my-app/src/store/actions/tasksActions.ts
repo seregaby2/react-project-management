@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { BASE_URL } from '../../constants/api';
+import { BASE_URL } from '../../constants';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
 import { getTokenFromLS } from '../../utils';
+import { SingupSlice } from '../reducers/authSlice';
 
 interface IGetAllTasksAsync {
   boardId: string;
@@ -23,6 +24,9 @@ export const getAllTasksAsync = createAsyncThunk(
       return { data: response.data, columnId };
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -50,6 +54,9 @@ export const createTaskAsync = createAsyncThunk(
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -69,6 +76,9 @@ export const deleteTaskAsync = createAsyncThunk(
       });
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }
@@ -119,6 +129,9 @@ export const updateTaskAsync = createAsyncThunk(
       return { task: response.data, columnId: columnId };
     } catch (error) {
       const err = error as AxiosError;
+      if (err.response?.status === 401) {
+        thunkApi.dispatch(SingupSlice.actions.setTokenStatus(false));
+      }
       return thunkApi.rejectWithValue(`${err.message}. ${err.response?.statusText}.`);
     }
   }

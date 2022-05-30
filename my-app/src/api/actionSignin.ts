@@ -5,7 +5,7 @@ import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchGetUser } from '../api/actionGetUser';
 import jwtDecode from 'jwt-decode';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 
 export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDispatch) => {
   try {
@@ -21,10 +21,12 @@ export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDis
     localStorage.setItem('checkAuthUser', 'user autorizated');
 
     await dispatch(fetchGetUser(decoded.userId));
+    dispatch(SingupSlice.actions.setTokenStatus(true));
   } catch (e) {
     const err = e as AxiosError;
     dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
     localStorage.clear();
+    dispatch(SingupSlice.actions.setTokenStatus(false));
   } finally {
     dispatch(SingupSlice.actions.loginFetchingSuccess());
   }

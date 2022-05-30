@@ -69,7 +69,7 @@ export function ProfilePage() {
               onNo={() => dispatch(HelpVarSlice.actions.setIsConfirmalModal(false))}
             />
           )}
-          <Typography variant="h4" component="div">
+          <Typography variant="h4" component="div" style={{ textAlign: 'center' }}>
             {t('editProfile')}
           </Typography>
           <form className={styles.formAuthPageForm} onSubmit={handleSubmit(onSubmit)}>

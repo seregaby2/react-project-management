@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 import { ISingUp } from '../interfaces/interfaceAuth';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
@@ -18,6 +18,10 @@ export const fetchGetUser = (id: string) => async (dispatch: AppDispatch) => {
     localStorage.setItem('dataUser', JSON.stringify(response.data));
   } catch (e) {
     const err = e as AxiosError;
+    if (e instanceof Error) {
+      dispatch(SingupSlice.actions.setTokenStatus(false));
+      localStorage.clear();
+    }
     dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
   } finally {
     dispatch(SingupSlice.actions.getUserFetchingSuccess());

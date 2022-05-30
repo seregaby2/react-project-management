@@ -6,6 +6,7 @@ export interface IPostRequest {
   errorUpdateUser: string;
   errorGetUser: string;
   errorDeleteUser: string;
+  isTokenActive: boolean;
 }
 
 export interface ISignInForm {

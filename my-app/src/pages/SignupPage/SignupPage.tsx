@@ -22,9 +22,8 @@ interface ISignInForm {
 
 export function SignupPage() {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.reducerSingupRequest);
+  const { isLoading, isTokenActive } = useAppSelector((state) => state.reducerSingupRequest);
   const { handleSubmit, control } = useForm<ISignInForm>();
-  const isAuth = localStorage.getItem('checkAuthUser');
   const navigate = useNavigate();
   const { t } = useTranslation(['signup']);
   const { errors } = useFormState({
@@ -32,8 +31,8 @@ export function SignupPage() {
   });
 
   useEffect(() => {
-    if (isAuth) navigate('/main');
-  }, [isAuth, navigate]);
+    if (isTokenActive) navigate('/main');
+  }, [isTokenActive, navigate]);
 
   const onSubmit: SubmitHandler<ISignInForm> = async (data) => {
     await dispatch(fetchDataAuth(data));

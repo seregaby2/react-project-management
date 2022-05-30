@@ -3,6 +3,7 @@
 .column {
   width: 270px;
   min-width: 270px;
+  max-height: 100%;
   height: 100%;
   padding: 10px;
   overflow-y: auto;
@@ -15,14 +16,8 @@
   height: fit-content;
 
   .columnHelper {
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 10px 0;
-  }
-
-  .columnHelper {
-    overflow-y: hidden;
+    overflow-y: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px 0;
