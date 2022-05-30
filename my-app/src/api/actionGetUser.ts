@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 import { ISingUp } from '../interfaces/interfaceAuth';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';

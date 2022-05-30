@@ -5,7 +5,7 @@ import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchGetUser } from '../api/actionGetUser';
 import jwtDecode from 'jwt-decode';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 
 export const fetchDataLogin = (dataAuth: ISignInForm) => async (dispatch: AppDispatch) => {
   try {

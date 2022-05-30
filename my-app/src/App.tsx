@@ -6,25 +6,38 @@ import { HelpVarSlice } from './store/reducers/helpVarSlice';
 import { CreateBoardForm } from './components/CreateBoardForm/CreateBoardForm';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
-const ERROR_403 = 'Request failed with status code 403. Forbidden.';
+import { ERROR } from './constants';
 
 function App() {
   const { errorMessage, successMessage } = useAppSelector((state) => state.reducerHelpVars);
   const { isShowCreateBoardForm } = useAppSelector((state) => state.reducerCreateBoardForm);
   const { t } = useTranslation(['editProfile']);
+  const { t: tSignIn } = useTranslation(['signin']);
+  const { t: tSignUp } = useTranslation(['signup']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleClickOk = () => {
     dispatch(HelpVarSlice.actions.setErrorMessage(''));
     dispatch(HelpVarSlice.actions.setSuccessMessage(''));
-    if (errorMessage !== ERROR_403) navigate('/');
+    if (errorMessage !== ERROR[403]) navigate('/');
   };
+
   return (
     <>
       {(errorMessage || successMessage) && (
-        <ConfirmError text={errorMessage || t('updateUser')} ClickOk={handleClickOk} />
+        <ConfirmError
+          text={
+            errorMessage === ERROR[403]
+              ? tSignIn('wrongData')
+              : errorMessage === ERROR[401]
+              ? tSignIn('unAuthorized')
+              : errorMessage === ERROR[409]
+              ? tSignUp('userAlreadyExist')
+              : errorMessage || t('successUpdateUserMessage')
+          }
+          ClickOk={handleClickOk}
+        />
       )}
       <Header />
       <Router />

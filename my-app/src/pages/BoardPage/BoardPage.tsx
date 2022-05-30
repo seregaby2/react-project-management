@@ -22,6 +22,7 @@ import { deleteTaskAsync, updateTaskAsync } from '../../store/actions/tasksActio
 import { tasksSlice } from '../../store/reducers/tasksSlice';
 import { columnsSlice } from '../../store/reducers/columnsSlice';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ERROR } from '../../constants';
 
 export const BoardPage = () => {
   const [createTask, setCreateTask] = useState(false);
@@ -46,6 +47,7 @@ export const BoardPage = () => {
     tasksSlice.actions;
   const { updateColumState, setIsDeleteColumn, clearColumnError } = columnsSlice.actions;
   const { t } = useTranslation(['confirmModal']);
+  const { t: tSignIn } = useTranslation(['signin']);
   const navigate = useNavigate();
   const { boardId } = useParams();
   const { boards } = useAppSelector((state) => state.reducerBoards);
@@ -149,7 +151,10 @@ export const BoardPage = () => {
         <>
           {columnError || taskError ? (
             <ConfirmError
-              text={columnError || taskError}
+              text={
+                (columnError === ERROR[401] ? tSignIn('unAuthorized') : columnError) ||
+                (taskError === ERROR[401] ? tSignIn('unAuthorized') : taskError)
+              }
               ClickOk={() => {
                 columnError
                   ? dispatch(clearColumnError()) &&

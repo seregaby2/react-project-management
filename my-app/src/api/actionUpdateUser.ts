@@ -4,7 +4,7 @@ import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
 import { fetchDataLogin } from './actionSignin';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 import { getTokenFromLS } from '../utils';
 
 export const fetchUpdateUser = (dataUpdateUser: ISignInForm) => async (dispatch: AppDispatch) => {

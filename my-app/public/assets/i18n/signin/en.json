@@ -1,7 +1,9 @@
 {
-    "logIn": "Log in",
-    "toGetaccess": "to get access",
-    "login": "login",
-    "password": "password",
-    "enter": "enter"
+  "logIn": "Log in",
+  "toGetaccess": "to get access",
+  "login": "login",
+  "password": "password",
+  "enter": "enter",
+  "wrongData": "Wrong data. Please, try again.",
+  "unAuthorized": "User unathorized."
 }

@@ -4,7 +4,7 @@ import { AppDispatch } from '../store/store';
 import { SingupSlice } from '../store/reducers/authSlice';
 import { fetchDataLogin } from './actionSignin';
 import { HelpVarSlice } from '../store/reducers/helpVarSlice';
-import { BASE_URL } from '../constants/api';
+import { BASE_URL } from '../constants';
 
 export const fetchDataAuth = (dataAuth: ISignInForm) => async (dispatch: AppDispatch) => {
   try {

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { BASE_URL } from '../../constants/api';
+import { BASE_URL } from '../../constants';
 import { ITaskRequest } from '../../interfaces/interfaceTasks';
 import { getTokenFromLS } from '../../utils';
 import { SingupSlice } from '../reducers/authSlice';
