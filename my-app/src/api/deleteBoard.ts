@@ -13,6 +13,7 @@ export const deleteBoard = (id: string) => async (dispatch: AppDispatch) => {
     await axios.delete<IBoard>(`${BASE_URL}/boards/${id}`, {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
+    dispatch(boardsActions.boardDeleteSuccess(id));
   } catch (e) {
     const err = e as AxiosError;
     dispatch(HelpVarSlice.actions.setErrorMessage(`${err.message}. ${err.response?.statusText}.`));
