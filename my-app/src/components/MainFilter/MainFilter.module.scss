@@ -1,0 +1,12 @@
+@import '../../styles/variables';
+.filterGroup {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+.filterInput {
+  width: 80% !important;
+}
+.filterSelect {
+  width: 20%;
+}

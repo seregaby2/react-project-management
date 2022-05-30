@@ -1,0 +1,36 @@
+@import '../../styles/variables';
+
+.mainPage {
+  padding-top: 20px;
+  .containerForInputAndButton {
+    width: 80vw;
+    margin: 0 auto;
+    @include flex-column;
+    justify-content: space-between;
+    .createBoardBtn {
+      margin: 20px auto 0;
+      width: 20vw;
+      height: 7vh;
+      border: 1px solid #1976d2;
+      @media (max-width: 780px) {
+        width: 40vw;
+      }
+      @media (max-width: 440px) {
+        height: 5vh;
+        font-size: 14px;
+      }
+    }
+  }
+  ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 20px;
+    margin-top: 10px;
+    gap: 3vh 3vw;
+    @include flex-align-center;
+    li {
+      margin-bottom: 10px;
+    }
+  }
+}

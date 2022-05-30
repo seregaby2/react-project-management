@@ -1,0 +1,56 @@
+@import '../../../styles/variables';
+
+.editTitleContainer {
+  @include flex-column;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  padding: 10px;
+  .controls {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    height: 15px;
+    div {
+      width: 20px;
+      height: 20px;
+      position: relative;
+      display: flex;
+      border: 1px solid black;
+      border-radius: 50%;
+      transition: all 0.35s ease;
+      &:hover {
+        transform: scale(1.2);
+      }
+      &:first-child:hover {
+        transform: scale(1.2);
+        border-color: $green;
+      }
+      &:last-child:hover {
+        transform: scale(1.2);
+        border-color: #ff0000;
+      }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(-13%, 10%);
+      }
+    }
+  }
+  .buttons {
+    height: 15px;
+    cursor: pointer;
+  }
+  .doneBtn {
+    color: $green;
+  }
+  .cancelBtn {
+    color: $red;
+  }
+}

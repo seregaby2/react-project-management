@@ -1,0 +1,9 @@
+{
+  "editProfile": "Редактировать профиль",
+  "name": "имя",
+  "login": "логин",
+  "password": "пароль",
+  "edit": "редактировать",
+  "deleteUser": "удалить",
+  "successUpdateUserMessage": "Lанные пользователя обновлены"
+}

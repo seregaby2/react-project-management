@@ -1,0 +1,9 @@
+{
+  "editProfile": "Edit profile",
+  "name": "name",
+  "login": "login",
+  "password": "password",
+  "edit": "edit",
+  "deleteUser": "delete user",
+  "successUpdateUserMessage": "User's data updated"
+}

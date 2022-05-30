@@ -1,0 +1,93 @@
+@import '../../styles/variables';
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+.confirmModal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  width: 50vw;
+  height: 40vh;
+  border: 1px solid $blue;
+  border-radius: 40px;
+  @include text36;
+  z-index: 10000;
+  justify-content: space-around;
+  @include flex-column;
+  p {
+    text-align: center;
+  }
+}
+.confirmModalBtns {
+  width: 100%;
+  height: 7vh;
+  @include flex-align-center;
+  justify-content: space-around;
+  button {
+    border: 1px solid $blue;
+    border-radius: 20px;
+    background-color: $grey;
+    height: 100%;
+    width: 35%;
+    transition: all 0.35s ease;
+    font-size: 32px;
+    &:hover {
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+    &:first-child:hover {
+      border-color: green;
+    }
+    &:last-child:hover {
+      border-color: red;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .confirmModal {
+    p {
+      @include text20;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .confirmModal {
+    width: 65vw;
+    p {
+      font-size: 28px;
+    }
+  }
+
+  .confirmModalBtns {
+    button {
+      height: 75%;
+      font-size: 28px;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .confirmModal {
+    padding: 10px;
+    width: 80vw;
+  }
+
+  .confirmModalBtns {
+    button {
+      height: 70%;
+      width: 25%;
+      font-size: 22px;
+    }
+  }
+}

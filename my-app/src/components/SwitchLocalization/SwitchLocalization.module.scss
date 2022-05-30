@@ -1,0 +1,7 @@
+@import '../../styles/variables.scss';
+
+.switch {
+  @include flex-align-center;
+  gap: 0 10px;
+  justify-content: center;
+}
